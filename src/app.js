@@ -10,8 +10,10 @@ async function query() {
         const con = await connect()
         const data = await con.query("SELECT * FROM temp")
         console.log(data[0])
-    }
-    catch (err) {
+        const insert = await con.query("INSERT INTO temp (name) VALUES (?)", ['Garv'])
+        console.log(insert[0])
+        console.table(data[0])
+    } catch (err) {
         console.log(err);
     }
 }
