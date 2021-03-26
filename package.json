@@ -1,12 +1,18 @@
 {
   "name": "flower-management-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/app.js",
   "repository": "https://github.com/Garvnanwani/flower-management-backend.git",
   "author": "Garvnanwani <garvnanwani88@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "nodemon run src/app"
+  },
   "dependencies": {
     "express": "^4.17.1",
     "mysql2": "^2.2.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }
