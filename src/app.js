@@ -1,7 +1,8 @@
 const express = require('express')
+
 const app = express()
+
 const { connect } = require('./db')
-const mysql = require('mysql2/promise')
 
 const PORT = process.env.PORT || 5000
 
