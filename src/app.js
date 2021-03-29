@@ -1,8 +1,12 @@
 const express = require('express')
 
+const productsRouter = require('./routes/products');
+
 const app = express()
 
 const { connect } = require('./db')
+
+app.use('/products', productsRouter);
 
 const PORT = process.env.PORT || 5000
 
