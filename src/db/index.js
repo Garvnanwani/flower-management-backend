@@ -1,13 +1,14 @@
 const mysql = require('mysql2/promise')
 
-async function connect() {
+const connect = async () => {
+
     try {
         const connection = mysql.createConnection({
-            "host": "sql6.freemysqlhosting.net",
+            "host": "bbghgkymw2dsxofwagqm-mysql.services.clever-cloud.com",
             "port": 3306,
-            "user": "sql6400678",
-            "password": "KSJpxykPK1",
-            "database": "sql6400678",
+            "user": "uhhwe83khqkwpdly",
+            "password": "iGcuguP1nxOGx23lGRrD",
+            "database": "bbghgkymw2dsxofwagqm",
         })
 
         return connection
@@ -15,6 +16,7 @@ async function connect() {
     catch (err) {
         console.log(err);
     }
+
 }
 
-module.exports = { connect }
+module.exports = connect
