@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const connect = require('../db');
+const connect = require('../config/db');
 
 router.get('/', async (req, res) => {
 
@@ -8,9 +8,7 @@ router.get('/', async (req, res) => {
 
         const con = await connect()
 
-        const data = await con.query("SELECT * FROM test")
-
-        await con.query("INSERT INTO test (name) VALUES (?)", ['Garv'])
+        const data = await con.query("SELECT * FROM users")
 
         console.log("working");
 
