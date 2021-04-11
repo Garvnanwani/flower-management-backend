@@ -1,7 +1,7 @@
 
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
+const db = require('../config/db');
 
 /* get method for fetch all products. */
 router.get('/', async (req, res) => {
