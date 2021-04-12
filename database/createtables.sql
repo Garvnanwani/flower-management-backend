@@ -27,6 +27,7 @@ CREATE TABLE orders (
   created_on DATETIME DEFAULT CURRENT_TIMESTAMP,
   status VARCHAR(50) DEFAULT "Not processed",
   user_id INT,
+  phone_number INT,
   PRIMARY KEY (order_id)
 );
 CREATE TABLE order_details (
