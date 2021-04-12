@@ -27,6 +27,7 @@ CREATE TABLE orders (
   created_on DATETIME DEFAULT CURRENT_TIMESTAMP,
   status VARCHAR(50) DEFAULT "Not processed",
   user_id INT,
+  product_id INT,
   phone_number INT,
   PRIMARY KEY (order_id)
 );
@@ -37,6 +38,7 @@ CREATE TABLE order_details (
   product_name VARCHAR(100),
   quantity INT,
   unit_cost INT,
+  payment_mode VARCHAR(50),
   PRIMARY KEY (item_id)
 );
 CREATE TABLE categories (
@@ -45,4 +47,11 @@ CREATE TABLE categories (
   description VARCHAR(1000),
   category_image VARCHAR(100),
   PRIMARY KEY (category_id)
+);
+CREATE TABLE choices (
+choices_id INT AUTO_INCREMENT,
+types VARCHAR(100),
+materials VARCHAR(100),
+colours VARCHAR(100),
+PRIMARY KEY (choices_id)
 );
