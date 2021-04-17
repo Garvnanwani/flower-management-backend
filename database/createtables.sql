@@ -7,7 +7,7 @@ CREATE TABLE users(
   dept VARCHAR(100),
   user_role TINYINT(1) DEFAULT 0,
   register_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY(userid)
+  PRIMARY KEY(user_id)
 );
 CREATE TABLE products(
   product_id INT AUTO_INCREMENT,
@@ -15,11 +15,12 @@ CREATE TABLE products(
   pdescription VARCHAR(300),
   pprice INT,
   psold INT DEFAULT 0,
+  pdiscount INT DEFAULT 0,
   pquantity INT DEFAULT 0,
   pcategory VARCHAR(50),
   prating DECIMAL(10, 2) DEFAULT '0.00',
   pimage VARCHAR(150),
-  PRIMARY KEY(productid)
+  PRIMARY KEY(product_id)
 );
 CREATE TABLE orders (
   order_id INT AUTO_INCREMENT,
@@ -54,4 +55,11 @@ types VARCHAR(100),
 materials VARCHAR(100),
 colours VARCHAR(100),
 PRIMARY KEY (choices_id)
+);
+CREATE TABLE has_production_cart(
+cart_id INT AUTO_INCREMENT,
+user_id INT,
+order_id INT,
+product_id INT,
+PRIMARY KEY (cart_id)
 );
