@@ -70,8 +70,6 @@ values
 ("CV","Vases","will brighten up and give life to the room and give aesthatic vibe to ones place,perfect gift for house warming parties"),
 ("CSOF","Special Occasion Flowers","Flowers designed with your thoughts in mind,numerous kinds of flowers that exist in different colors having its own meaning and representation for different type of moments like weddings, wedding anniversaries, birthday parties, valentine day and so on."),
 ("CAF","Artificial Flowers","transforms any settings in room,as beautiful and attractive flowers as a real flower arrangements in the decoration,are imitations of natural flowering plants used for commercial or residential decoration,if properly taken care of, it lasts for many years.");
-insert into choices( choices_id,types,materials,colours)
-values();
 insert into choices(materials)
 values("real"),
 ("scented"),
