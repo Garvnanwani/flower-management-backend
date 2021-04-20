@@ -63,3 +63,34 @@ order_id INT,
 product_id INT,
 PRIMARY KEY (cart_id)
 );
+insert into categories( category_id, name, description, category_image)
+values 
+("CB","Bouquets","the bouquet creates a wonderful expression of gratitude and affection,perfect combo of beauty and bounty,serene to the eyes and warm to the heart"),
+("CFB","Flower Baskets","a dramatic display of lush and lavish blooms,mainly for wedding and for formal parties,extend warm wishes and regards"),
+("CV","Vases","will brighten up and give life to the room and give aesthatic vibe to ones place,perfect gift for house warming parties"),
+("CSOF","Special Occasion Flowers","Flowers designed with your thoughts in mind,numerous kinds of flowers that exist in different colors having its own meaning and representation for different type of moments like weddings, wedding anniversaries, birthday parties, valentine day and so on."),
+("CAF","Artificial Flowers","transforms any settings in room,as beautiful and attractive flowers as a real flower arrangements in the decoration,are imitations of natural flowering plants used for commercial or residential decoration,if properly taken care of, it lasts for many years.");
+insert into choices( choices_id,types,materials,colours)
+values();
+insert into choices(materials)
+values("real"),
+("scented"),
+("non-scented"),
+("handmade"),
+("fabric"),
+("plastic"),
+("glass");
+insert into choices (colours)
+ values("red"),
+ ("blue"),
+ ("lavender"),
+ ("pink"),
+ ("orange"),
+ ("yellow");
+ insert into choices(types)
+ values("Roses"),
+ ("Tulips"),
+ ("Poppies"),
+ ("Daisies"),
+ ("Lilies");
+ 
