@@ -1,8 +1,8 @@
 CREATE TABLE users(
-  user_id INT AUTO_INCREMENT,
-  name VARCHAR(50),
-  email VARCHAR(50),
-  password VARCHAR(20),
+  user_id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(50) NOT NULL ,
+  email VARCHAR(50) NOT NULL,
+  password VARCHAR(20) NOT NULL,
   default_shipping_address VARCHAR(100),
   dept VARCHAR(100),
   user_role TINYINT(1) DEFAULT 0,
@@ -10,7 +10,7 @@ CREATE TABLE users(
   PRIMARY KEY(user_id)
 );
 CREATE TABLE products(
-  product_id INT AUTO_INCREMENT,
+  product_id INT NOT NULL AUTO_INCREMENT,
   pname VARCHAR(50),
   pdescription VARCHAR(300),
   pprice INT,
@@ -23,8 +23,8 @@ CREATE TABLE products(
   PRIMARY KEY(product_id)
 );
 CREATE TABLE orders (
-  order_id INT AUTO_INCREMENT,
-  total_amount INT,
+  order_id INT NOT NULL AUTO_INCREMENT,
+  total_amount INT NOT NULL DEFAULT '0.00',
   created_on DATETIME DEFAULT CURRENT_TIMESTAMP,
   status VARCHAR(50) DEFAULT "Not processed",
   user_id INT,
@@ -33,34 +33,34 @@ CREATE TABLE orders (
   PRIMARY KEY (order_id)
 );
 CREATE TABLE order_details (
-  item_id INT AUTO_INCREMENT,
-  order_id INT,
-  product_id INT,
-  product_name VARCHAR(100),
-  quantity INT,
-  unit_cost INT,
-  payment_mode VARCHAR(50),
+  item_id INT NOT NULL AUTO_INCREMENT,
+  order_id INT NOT NULL,
+  product_id INT NOT NULL,
+  product_name VARCHAR(100) NOT NULL,
+  quantity INT NOT NULL,
+  unit_cost INT NOT NULL,
+  payment_mode VARCHAR(50) NOT NULL,
   PRIMARY KEY (item_id)
 );
 CREATE TABLE categories (
-  category_id INT AUTO_INCREMENT,
+  category_id INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(100),
   description VARCHAR(1000),
   category_image VARCHAR(100),
   PRIMARY KEY (category_id)
 );
 CREATE TABLE choices (
-choices_id INT AUTO_INCREMENT,
+choices_id INT NOT NULL AUTO_INCREMENT,
 types VARCHAR(100),
 materials VARCHAR(100),
 colours VARCHAR(100),
 PRIMARY KEY (choices_id)
 );
 CREATE TABLE has_production_cart(
-cart_id INT AUTO_INCREMENT,
-user_id INT,
-order_id INT,
-product_id INT,
+cart_id INT NOT NULL AUTO_INCREMENT,
+user_id INT NOT NULL,
+order_id INT NOT NULL,
+product_id INT NOT NULL,
 PRIMARY KEY (cart_id)
 );
 insert into categories( category_id, name, description, category_image)
