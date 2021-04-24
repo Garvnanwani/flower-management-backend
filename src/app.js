@@ -1,4 +1,4 @@
-const express = require('express')
+const express = require('express');
 require("dotenv").config();
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
@@ -8,7 +8,7 @@ const cors = require("cors");
 const productsRouter = require('./routes/products');
 const testRouter = require('./routes/testRoute');
 
-const app = express()
+const app = express();
 
 // Middlewares
 app.use(morgan("dev"));
