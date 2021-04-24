@@ -8,7 +8,7 @@ const cors = require("cors");
 const productsRouter = require('./routes/products');
 const testRouter = require('./routes/testRoute');
 
-const app = express()
+const app = express();
 
 // Middlewares
 app.use(morgan("dev"));
