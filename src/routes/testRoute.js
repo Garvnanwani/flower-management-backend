@@ -8,11 +8,13 @@ router.get('/', async (req, res) => {
 
         const con = await connect()
 
-        const data = await con.query("SELECT * FROM users")
+        const sql = "SELECT * FROM users"
+
+        const data = await con.query(sql)
 
         console.log("working");
 
-        res.json(data)
+        res.json(data[0][0])
 
     } catch (err) {
 

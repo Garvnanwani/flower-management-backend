@@ -20,7 +20,7 @@ app.use(express.json());
 
 // Routes
 app.use('/products', productsRouter);
-app.use('/', testRouter);
+app.use('/users', testRouter);
 
 
 // Run the server
