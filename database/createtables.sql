@@ -4,10 +4,8 @@ CREATE TABLE users(
   name VARCHAR(50) NOT NULL ,
   email VARCHAR(50) NOT NULL,
   password VARCHAR(20) NOT NULL,
-  default_shipping_address VARCHAR(100),
-  dept VARCHAR(100),
-  user_role TINYINT(1) DEFAULT 0,
-  register_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  default_shipping_address VARCHAR(100) NOT NULL,
+  phone_number INT NOT NULL,
   PRIMARY KEY(user_id)
 );
 
