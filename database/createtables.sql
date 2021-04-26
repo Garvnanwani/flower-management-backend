@@ -8,7 +8,8 @@ CREATE TABLE users(
   phone_number INT NOT NULL,
   user_role TINYINT(1) DEFAULT 0,
   register_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY(user_id)
+  PRIMARY KEY(user_id),
+  UNIQUE KEY idx_user_email (email),
 );
 -- Create product table
 CREATE TABLE products(
@@ -21,7 +22,8 @@ CREATE TABLE products(
   pquantity INT DEFAULT 0,
   prating DECIMAL(10, 2) DEFAULT '0.00',
   pimage VARCHAR(150),
-  PRIMARY KEY(product_id)
+  PRIMARY KEY(product_id),
+  FULLTEXT KEY idx_ft_product_pname_pdescription (pname, pdescription)
 );
 -- Create product_category table
 CREATE TABLE product_category(
@@ -38,7 +40,8 @@ CREATE TABLE orders (
   user_id INT,
   product_id VARCHAR(10),
   phone_number INT,
-  PRIMARY KEY (order_id)
+  PRIMARY KEY (order_id),
+  KEY idx_orders_user_id (user_id),
 );
 -- Create order_details table
 CREATE TABLE order_details (
@@ -49,7 +52,8 @@ CREATE TABLE order_details (
   quantity INT NOT NULL,
   unit_cost INT NOT NULL,
   payment_mode VARCHAR(50) NOT NULL,
-  PRIMARY KEY (item_id)
+  PRIMARY KEY (item_id),
+   KEY idx_order_detail_order_id (order_id)
 );
 -- Create categories table
 CREATE TABLE categories (
@@ -70,7 +74,8 @@ CREATE TABLE choices_value(
   choices_value_id INT AUTO_INCREMENT,
   choices_id INT,
   value VARCHAR(100),
-  PRIMARY KEY (choices_value_id)
+  PRIMARY KEY (choices_value_id),
+  KEY idx_choices_value_choices_id (choices_id)
 );
 -- Create product_choices table (associates choices values to products)
 CREATE TABLE product_choices (
@@ -84,7 +89,8 @@ CREATE TABLE has_production_cart(
   user_id INT NOT NULL,
   order_id INT NOT NULL,
   product_id VARCHAR(10) NOT NULL,
-  PRIMARY KEY (cart_id)
+  PRIMARY KEY (cart_id),
+  KEY idx_has_production_cart_id (cart_id)
 );
 -- Populate category table
 INSERT INTO
