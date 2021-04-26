@@ -147,7 +147,7 @@ VALUES
 -- Populate product_choices table 
 INSERT INTO product_choices (product_id, choices_value_id)
        SELECT p.product_id, cvi.choices_value_id
-       FROM   product p, choices_value cvi;                                    
+       FROM   product p, choices_value cvi                                  
                                     
 
 
