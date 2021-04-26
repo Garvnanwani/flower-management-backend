@@ -7,7 +7,7 @@ export const handlereg=(req,res,db,bcrypt)=>{
   }
 
   const user_sql = `
-  INSERT INTO user 
+  INSERT INTO users 
   (
     user_id, 
     name, 
