@@ -1,6 +1,10 @@
 const connect = require('../config/db')
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const { JWT_SECRET } = require('../config/keys')
+const { validateEmail, toTitleCase } = require('../config/function')
 
-export const isAdmin = async (req, res) => {
+const isAdmin = async (req, res) => {
     let { loggedInUserId } = req.body
     try {
         const result = await db.query(
@@ -16,7 +20,7 @@ export const isAdmin = async (req, res) => {
     }
 }
 
-export const allUser = async (req, res) => {
+const allUser = async (req, res) => {
     try {
         const db = await connect()
 
@@ -31,58 +35,38 @@ export const allUser = async (req, res) => {
 }
 
 /* User Registration/Signup controller  */
-export const postSignup = async (req, res) => {
+const postSignup = async (req, res) => {
     try {
         const db = await connect()
 
         let { name, email, password } = req.body
-        let error = {}
+
         if (!name || !email || !password) {
-            error = {
-                ...error,
-                name: 'Field must not be empty',
-                email: 'Field must not be empty',
-                password: 'Field must not be empty',
-            }
-            return res.json({ error })
+            return res.json('All fields are neccesary')
         }
         if (name.length < 3 || name.length > 25) {
-            error = { ...error, name: 'Name must be 3-25 charecter' }
-            return res.json({ error })
+            return res.json('Name must be 3-25 charecter')
         }
         if (validateEmail(email)) {
             name = toTitleCase(name)
             if (password.length > 255 || password.length < 8) {
-                error = {
-                    ...error,
-                    password: 'Password must be 8 charecter',
-                    name: '',
-                    email: '',
-                }
-                return res.json({ error })
+                return res.json('Password must be 8 charecter')
             } else {
                 // If Email & Number exists in Database then:
-                try {
-                    password = bcrypt.hashSync(password, 10)
+                password = bcrypt.hashSync(password, 10)
 
-                    const result = await db.query(
-                        `
+                const result = await db.query(
+                    `
                         SELECT email FROM users WHERE email = ?
                     `,
-                        [email]
-                    )
+                    [email]
+                )
 
-                    if (result[0]) {
-                        error = {
-                            ...error,
-                            password: '',
-                            name: '',
-                            email: 'Email already exists',
-                        }
-                        return res.json({ error })
-                    } else {
-                        const result = await db.query(
-                            `INSERT INTO users
+                if (result[0].length > 0) {
+                    return res.json('Email already exists')
+                } else {
+                    const result = await db.query(
+                        `INSERT INTO users
                           (
                             name,
                             email,
@@ -91,34 +75,24 @@ export const postSignup = async (req, res) => {
                           VALUES (
                             ?, ?, ?
                           )`,
-                            [name, email, password]
-                        )
+                        [name, email, password]
+                    )
 
-                        return res.json({
-                            success:
-                                'Account create successfully. Please login',
-                        })
-                    }
-                } catch (err) {
-                    console.log(err)
+                    return res.json({
+                        success: 'Account create successfully. Please login',
+                    })
                 }
             }
         } else {
-            error = {
-                ...error,
-                password: '',
-                name: '',
-                email: 'Email is not valid',
-            }
             return res.json({ error })
         }
     } catch (err) {
-        console.log(error)
+        console.log(err)
     }
 }
 
 /* User Login/Signin controller  */
-export const postSignin = async (req, res) => {
+const postSignin = async (req, res) => {
     let { email, password } = req.body
     if (!email || !password) {
         return res.json({
@@ -128,16 +102,17 @@ export const postSignin = async (req, res) => {
     try {
         const db = await connect()
 
-        const data = await db.query(`SELECT * FROM users where email = ?`, [
-            email,
-        ])
+        const [
+            result,
+            _,
+        ] = await db.query(`SELECT * FROM users where email = ?`, [email])
 
-        if (!data) {
+        if (result.length == 0) {
             return res.json({
                 error: 'Invalid email or password',
             })
         } else {
-            const login = await bcrypt.compare(password, data.password)
+            const login = await bcrypt.compare(password, result.password)
             if (login) {
                 const token = jwt.sign(
                     { _id: data._id, role: data.userRole },
@@ -157,4 +132,11 @@ export const postSignin = async (req, res) => {
     } catch (err) {
         console.log(err)
     }
+}
+
+module.exports = {
+    allUser,
+    postSignup,
+    postSignin,
+    isAdmin,
 }

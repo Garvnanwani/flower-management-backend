@@ -1,6 +1,6 @@
 const connect = require('../config/db')
 
-export const getAllCategory = async (req, res) => {
+const getAllCategory = async (req, res) => {
     try {
         const db = await connect()
 
@@ -21,7 +21,7 @@ export const getAllCategory = async (req, res) => {
     }
 }
 
-export const postAddCategory = async (req, res) => {
+const postAddCategory = async (req, res) => {
     let { cName, cDescription, cStatus } = req.body
     let cImage = req.file.filename
     const filePath = `../server/public/uploads/categories/${cImage}`
@@ -67,7 +67,7 @@ export const postAddCategory = async (req, res) => {
     }
 }
 
-export const postEditCategory = async (req, res) => {
+const postEditCategory = async (req, res) => {
     let { cId, cDescription, cStatus } = req.body
     if (!cId || !cDescription || !cStatus) {
         return res.json({ error: 'All filled must be required' })
@@ -87,7 +87,7 @@ export const postEditCategory = async (req, res) => {
     }
 }
 
-export const getDeleteCategory = async (req, res) => {
+const getDeleteCategory = async (req, res) => {
     let { cId } = req.body
     if (!cId) {
         return res.json({ error: 'All filled must be required' })
@@ -112,4 +112,11 @@ export const getDeleteCategory = async (req, res) => {
             console.log(err)
         }
     }
+}
+
+module.exports = {
+    getAllCategory,
+    postAddCategory,
+    postEditCategory,
+    getDeleteCategory,
 }

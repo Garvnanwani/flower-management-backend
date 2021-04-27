@@ -129,9 +129,7 @@ const SendTestMail = async () => {
     })
 }
 
-const order = {
+module.exports = {
     CreateOrder,
     SendTestMail,
 }
-
-module.exports = order

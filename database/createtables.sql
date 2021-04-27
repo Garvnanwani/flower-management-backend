@@ -3,7 +3,7 @@ CREATE TABLE users(
   user_id INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
-  password VARCHAR(20) NOT NULL,
+  password VARCHAR(200) NOT NULL,
   default_shipping_address VARCHAR(100) NOT NULL,
   phone_number INT NOT NULL,
   user_role TINYINT(1) DEFAULT 0,
@@ -53,7 +53,7 @@ CREATE TABLE order_details (
   unit_cost INT NOT NULL,
   payment_mode VARCHAR(50) NOT NULL,
   PRIMARY KEY (item_id),
-   KEY idx_order_detail_order_id (order_id)
+  KEY idx_order_detail_order_id (order_id)
 );
 -- Create categories table
 CREATE TABLE categories (
@@ -206,7 +206,17 @@ VALUES
     "",
     ""
   ),
-  ("P7", "Bunches fake flowers", "", "", "", "", "", "", ""),
+  (
+    "P7",
+    "Bunches fake flowers",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+  ),
   (
     "P8",
     "Artificial flower garlands",

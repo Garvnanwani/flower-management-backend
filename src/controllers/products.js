@@ -305,11 +305,9 @@ const GetProductDetailsById = (request, response) => {
     }
 }
 
-const product = {
+module.exports = {
     GetProducts,
     GetProductChoices,
     GetFilteredProducts,
     GetProductDetailsById,
 }
-
-module.exports = product
