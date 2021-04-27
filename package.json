@@ -9,8 +9,8 @@
         "node": "14.16.1"
     },
     "scripts": {
-        "start": "node run src/app",
-        "dev": "nodemon run src/app"
+        "start": "node src/app",
+        "dev": "nodemon src/app"
     },
     "dependencies": {
         "bcryptjs": "^2.4.3",
