@@ -15,7 +15,9 @@ const customizeRouter = require('./routes/customize')
 const app = express()
 
 // Middlewares
-app.use(morgan('dev'))
+if (process.env.NODE_ENV != 'production') {
+    app.use(morgan('dev'))
+}
 app.use(cookieParser())
 app.use(cors())
 app.use(express.static('public'))
