@@ -1,23 +1,37 @@
-export const handlereg=(req,res,db,bcrypt)=>{
-    const {user_id,name,email,password,default_shipping_address,phone_number}=req.body;
-  // const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(password ,10);
-  if(!user_id || !name || !email || !password || !default_shipping_address || !phone_number){
-    return res.status(400).json("Details need to be filled necessary ");
-  }
+export const handlereg = (req, res, db, bcrypt) => {
+    const {
+        user_id,
+        name,
+        email,
+        password,
+        default_shipping_address,
+        phone_number,
+    } = req.body
+    // const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, 10)
+    if (
+        !user_id ||
+        !name ||
+        !email ||
+        !password ||
+        !default_shipping_address ||
+        !phone_number
+    ) {
+        return res.status(400).json('Details need to be filled necessary ')
+    }
 
-  const user_sql = `
-  INSERT INTO users 
+    const user_sql = `
+  INSERT INTO users
   (
-    user_id, 
-    name, 
+    user_id,
+    name,
     email,
     password,
     default_shipping_address,
     phone_number
     )
-  
-  VALUES ( 
+
+  VALUES (
     '${user_id}',
     '${name}',
     '${email}',
@@ -26,16 +40,14 @@ export const handlereg=(req,res,db,bcrypt)=>{
     '${phone_number}',
   );
   `
- 
 
-db.query(user_sql, (err, result)=> {
- if(err){   res.json(" user already available"); return ;}
+    db.query(user_sql, (err, result) => {
+        if (err) {
+            res.json(' user already available')
+            return
+        }
 
-  console.log(result); 
-  res.json(email)
- 
- 
-});
-
-
+        console.log(result)
+        res.json(email)
+    })
 }
