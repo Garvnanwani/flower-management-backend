@@ -6,7 +6,7 @@
     "author": "Garvnanwani <garvnanwani88@gmail.com>",
     "license": "MIT",
     "engines": {
-        "node": "16.x"
+        "node": "14.16.1"
     },
     "scripts": {
         "start": "node run src/app",
