@@ -26,11 +26,11 @@ app.use(express.json())
 
 // Routes
 app.use('/api', authRouter)
-// app.use('/api/user', usersRouter)
-// app.use('/api/category', categoryRouter)
-// app.use('/api/product', productRouter)
-// app.use('/api/order', orderRouter)
-// app.use('/api/customize', customizeRouter)
+app.use('/api/user', usersRouter)
+app.use('/api/category', categoryRouter)
+app.use('/api/product', productRouter)
+app.use('/api/order', orderRouter)
+app.use('/api/customize', customizeRouter)
 
 // Run the server
 const PORT = process.env.PORT || 5000
