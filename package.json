@@ -5,6 +5,9 @@
     "repository": "https://github.com/Garvnanwani/flower-management-backend.git",
     "author": "Garvnanwani <garvnanwani88@gmail.com>",
     "license": "MIT",
+    "engines": {
+        "node": "16.x"
+    },
     "scripts": {
         "start": "node run src/app",
         "dev": "nodemon run src/app"
