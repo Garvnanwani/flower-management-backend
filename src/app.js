@@ -1,6 +1,5 @@
 const express = require('express')
 require('dotenv').config()
-const morgan = require('morgan')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
 
@@ -16,6 +15,7 @@ const app = express()
 
 // Middlewares
 if (process.env.NODE_ENV != 'production') {
+    const morgan = require('morgan')
     app.use(morgan('dev'))
 }
 app.use(cookieParser())
