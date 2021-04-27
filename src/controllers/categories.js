@@ -1,4 +1,6 @@
 const connect = require('../config/db')
+const { toTitleCase } = require('../config/function')
+const fs = require('fs')
 
 const getAllCategory = async (req, res) => {
     try {
