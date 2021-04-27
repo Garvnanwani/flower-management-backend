@@ -1,77 +1,31 @@
-
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const db = require('../config/db');
+const productController = require("../controller/products");
+const multer = require("multer");
 
-/* get method for fetch all products. */
-router.get('/', async (req, res) => {
-
-    try {
-
-
-    } catch (err) {
-
-
-
-    }
-
-
-
-
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/uploads/products");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "_" + file.originalname);
+  },
 });
 
-/*get method for fetch single product*/
-router.get('/:id', async (req, res) => {
+const upload = multer({ storage: storage });
 
-    try {
+router.get("/all-product", productController.getAllProduct);
+router.post("/product-by-category", productController.getProductByCategory);
+router.post("/product-by-price", productController.getProductByPrice);
+router.post("/wish-product", productController.getWishProduct);
+router.post("/cart-product", productController.getCartProduct);
 
+router.post("/add-product", upload.any(), productController.postAddProduct);
+router.post("/edit-product", upload.any(), productController.postEditProduct);
+router.post("/delete-product", productController.getDeleteProduct);
+router.post("/single-product", productController.getSingleProduct);
 
-    } catch (err) {
-
-
-
-    }
-
-
-
-
-});
-
-/*post method for create product*/
-router.post('/create', async (req, res) => {
-    try {
-
-    } catch (err) {
-
-    }
-
-
-});
-
-/*put method for update product*/
-router.put('/update/:id', async (req, res) => {
-
-    try {
-
-
-    } catch (err) {
-
-
-
-    }
-});
-
-/*delete method for delete product*/
-router.delete('/delete/:id', async (req, res) => {
-
-    try {
-
-
-    } catch (err) {
-
-
-
-    }
-});
+router.post("/add-review", productController.postAddReview);
+router.post("/delete-review", productController.deleteReview);
 
 module.exports = router;
