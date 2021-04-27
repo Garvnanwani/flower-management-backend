@@ -6,11 +6,11 @@ const cors = require('cors')
 
 // Import Routes
 const authRouter = require('./routes/auth')
-// const categoryRouter = require('./routes/categories')
-// const productRouter = require('./routes/products')
-// const orderRouter = require('./routes/orders')
-// const usersRouter = require('./routes/users')
-// const customizeRouter = require('./routes/customize')
+const categoryRouter = require('./routes/categories')
+const productRouter = require('./routes/products')
+const orderRouter = require('./routes/orders')
+const usersRouter = require('./routes/users')
+const customizeRouter = require('./routes/customize')
 
 const app = express()
 
