@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const productController = require("../controller/products");
+const {getAllProduct, getProductByCategory, getProductByPrice, getWishProduct, getCartProduct, postAddProduct, postEditProduct, getDeleteProduct, getSingleProduct, postAddReview, deleteReview} = require("../controller/products");
 const multer = require("multer");
 
 var storage = multer.diskStorage({
@@ -14,18 +14,18 @@ var storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get("/all-product", productController.getAllProduct);
-router.post("/product-by-category", productController.getProductByCategory);
-router.post("/product-by-price", productController.getProductByPrice);
-router.post("/wish-product", productController.getWishProduct);
-router.post("/cart-product", productController.getCartProduct);
+router.get("/all-product", getAllProduct);
+router.post("/product-by-category", getProductByCategory);
+router.post("/product-by-price", getProductByPrice);
+router.post("/wish-product", getWishProduct);
+router.post("/cart-product", getCartProduct);
 
-router.post("/add-product", upload.any(), productController.postAddProduct);
-router.post("/edit-product", upload.any(), productController.postEditProduct);
-router.post("/delete-product", productController.getDeleteProduct);
-router.post("/single-product", productController.getSingleProduct);
+router.post("/add-product", upload.any(), postAddProduct);
+router.post("/edit-product", upload.any(), postEditProduct);
+router.post("/delete-product", getDeleteProduct);
+router.post("/single-product", getSingleProduct);
 
-router.post("/add-review", productController.postAddReview);
-router.post("/delete-review", productController.deleteReview);
+router.post("/add-review", postAddReview);
+router.post("/delete-review", deleteReview);
 
 module.exports = router;
