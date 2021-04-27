@@ -107,15 +107,18 @@ const postSignin = async (req, res) => {
             _,
         ] = await db.query(`SELECT * FROM users where email = ?`, [email])
 
+        console.log(result)
+
         if (result.length == 0) {
             return res.json({
                 error: 'Invalid email or password',
             })
         } else {
-            const login = await bcrypt.compare(password, result.password)
+            const user = result[0]
+            const login = await bcrypt.compare(password, user.password)
             if (login) {
                 const token = jwt.sign(
-                    { _id: data._id, role: data.userRole },
+                    { userid: user.userid, role: user.userRole },
                     JWT_SECRET
                 )
                 const encode = jwt.verify(token, JWT_SECRET)
