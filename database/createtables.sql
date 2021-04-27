@@ -93,8 +93,8 @@ CREATE TABLE has_production_cart(
   KEY idx_has_production_cart_id (cart_id)
 );
 -- Populate category table
-INSERT INTO
-  INTO categories(category_id, name, description, category_image)
+INSERT INTO 
+    categories(category_id, name, description, category_image)
 VALUES
   (
     "CB",
