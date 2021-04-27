@@ -28,38 +28,40 @@ const deleteImages = (images, mode) => {
 
 const getAllProduct = async (req, res) => {
     try {
-        let Products = await productModel
-            .find({})
-            .populate('pCategory', '_id cName')
-            .sort({ _id: -1 })
-        if (Products) {
-            return res.json({ Products })
-        }
-    } catch (err) {
+        const db = await connect()
+
+        const [result, _] = await db.query(`
+            SELECT * FROM products
+        `)
+
+        res.json({ users: result })
+    } catch {
+        res.status(404)
         console.log(err)
     }
 }
 
 const postAddProduct = async (req, res) => {
     let {
-        pName,
-        pDescription,
-        pPrice,
-        pQuantity,
-        pCategory,
-        pOffer,
-        pStatus,
+        pname,
+        pdescription,
+        pprice,
+        psold,
+        pquantity,
+        pcategory,
+        prating,
     } = req.body
+
     let images = req.files
     // Validation
     if (
-        !pName |
-        !pDescription |
-        !pPrice |
-        !pQuantity |
-        !pCategory |
-        !pOffer |
-        !pStatus
+        !pname ||
+        !pdescription ||
+        !pprice ||
+        !psold ||
+        !pquantity ||
+        !pcategory ||
+        !prating
     ) {
         deleteImages(images, 'file')
         return res.json({ error: 'All filled must be required' })
@@ -72,29 +74,42 @@ const postAddProduct = async (req, res) => {
         })
     }
     // Validate Images
-    else if (images.length !== 2) {
-        deleteImages(images, 'file')
-        return res.json({ error: 'Must need to provide 2 images' })
-    } else {
+    // else if (images.length !== 2) {
+    //     deleteImages(images, 'file')
+    //     return res.json({ error: 'Must need to provide 2 images' })
+    // }
+    else {
         try {
+            const db = await connect()
+
             let allImages = []
             for (const img of images) {
                 allImages.push(img.filename)
             }
-            let newProduct = new productModel({
-                pImages: allImages,
-                pName,
-                pDescription,
-                pPrice,
-                pQuantity,
-                pCategory,
-                pOffer,
-                pStatus,
-            })
-            let save = await newProduct.save()
-            if (save) {
-                return res.json({ success: 'Product created successfully' })
-            }
+            const [result, _] = await db.query(
+                `
+                INSERT INTO products (
+                    pname,
+                    pdescription,
+                    pprice,
+                    psold,
+                    pquantity,
+                    pcategory,
+                    prating,
+                ) VALUES (
+                    ?, ?, ?, ?, ?, ?, ?
+                )`,
+                [
+                    pname,
+                    pdescription,
+                    pprice,
+                    psold,
+                    pquantity,
+                    pcategory,
+                    prating,
+                ]
+            )
+            return res.json({ success: 'Product created successfully' })
         } catch (err) {
             console.log(err)
         }

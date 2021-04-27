@@ -7,16 +7,17 @@ const { validateEmail, toTitleCase } = require('../config/function')
 const isAdmin = async (req, res) => {
     let { loggedInUserId } = req.body
     try {
-        const result = await db.query(
+        const [result, _] = await db.query(
             `
             SELECT userRole FROM users WHERE userid = ?
         `,
             [loggedInUserId]
         )
 
-        res.json({ role: result[0] })
+        res.json({ role: result })
     } catch {
         res.status(404)
+        console.log(err)
     }
 }
 
@@ -24,13 +25,14 @@ const allUser = async (req, res) => {
     try {
         const db = await connect()
 
-        const result = await db.query(`
+        const [result, _] = await db.query(`
             SELECT * FROM users
         `)
 
-        res.json({ users: result[0] })
+        res.json({ users: result })
     } catch {
         res.status(404)
+        console.log(err)
     }
 }
 
@@ -42,7 +44,9 @@ const postSignup = async (req, res) => {
         let { name, email, password } = req.body
 
         if (!name || !email || !password) {
-            return res.json('All fields are neccesary')
+            return res.json({
+                error: 'All fields are neccesary',
+            })
         }
         if (name.length < 3 || name.length > 25) {
             return res.json('Name must be 3-25 charecter')
@@ -50,22 +54,26 @@ const postSignup = async (req, res) => {
         if (validateEmail(email)) {
             name = toTitleCase(name)
             if (password.length > 255 || password.length < 8) {
-                return res.json('Password must be 8 charecter')
+                return res.json({
+                    error: 'Password must be 8 charecter',
+                })
             } else {
                 // If Email & Number exists in Database then:
                 password = bcrypt.hashSync(password, 10)
 
-                const result = await db.query(
+                const [result, _] = await db.query(
                     `
                         SELECT email FROM users WHERE email = ?
                     `,
                     [email]
                 )
 
-                if (result[0].length > 0) {
-                    return res.json('Email already exists')
+                if (result.length > 0) {
+                    return res.json({
+                        error: 'Email already exists',
+                    })
                 } else {
-                    const result = await db.query(
+                    const [result, _] = await db.query(
                         `INSERT INTO users
                           (
                             name,
