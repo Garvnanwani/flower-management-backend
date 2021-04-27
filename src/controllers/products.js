@@ -1,6 +1,6 @@
-const productModel = require('../models/products')
 const fs = require('fs')
 const path = require('path')
+const connect = require('../config/db')
 
 // Delete Image from uploads -> products folder
 const deleteImages = (images, mode) => {
