@@ -2,9 +2,9 @@ const bcrypt = require('bcryptjs')
 const connect = require('../config/db')
 
 const getSingleUser = async (req, res) => {
-    let { id } = req.body
+    let { userid } = req.body
 
-    if (!id) {
+    if (!userid) {
         return res.json({ error: 'All filled must be required' })
     }
     try {
@@ -12,7 +12,7 @@ const getSingleUser = async (req, res) => {
 
         const [result, _] = await db.query(
             `SELECT * FROM users WHERE userid=?`,
-            [id]
+            [userid]
         )
 
         return res.json({ User: result })
@@ -22,8 +22,8 @@ const getSingleUser = async (req, res) => {
 }
 
 const postEditUser = async (req, res) => {
-    let { userId, name } = req.body
-    if (!userId || !name) {
+    let { userid, name } = req.body
+    if (!userid || !name) {
         return res.json({ message: 'All filled must be required' })
     } else {
         try {
@@ -48,36 +48,51 @@ const postEditUser = async (req, res) => {
 }
 
 const changePassword = async (req, res) => {
-    let { uId, oldPassword, newPassword } = req.body
-    if (!uId || !oldPassword || !newPassword) {
+    let { userid, oldPassword, newPassword } = req.body
+    if (!userid || !oldPassword || !newPassword) {
         return res.json({ message: 'All filled must be required' })
     } else {
-        const data = await userModel.findOne({ _id: uId })
-        if (!data) {
-            return res.json({
-                error: 'Invalid user',
-            })
-        } else {
-            const oldPassCheck = await bcrypt.compare(
-                oldPassword,
-                data.password
-            )
-            if (oldPassCheck) {
-                newPassword = bcrypt.hashSync(newPassword, 10)
-                let passChange = userModel.findByIdAndUpdate(uId, {
-                    password: newPassword,
+        try {
+            const db = await connect()
+
+            const [
+                result,
+                _,
+            ] = await db.query(`SELECT * FROM users WHERE userid=?`, [userid])
+
+            if (result.length < 1) {
+                return res.json({
+                    error: 'Invalid user',
                 })
-                passChange.exec((err, result) => {
-                    if (err) console.log(err)
+            } else {
+                const oldPassCheck = await bcrypt.compare(
+                    oldPassword,
+                    data.password
+                )
+                if (oldPassCheck) {
+                    newPassword = bcrypt.hashSync(newPassword, 10)
+
+                    const [result, _] = await db.query(
+                        `
+                        UPDATE users
+                        SET
+                            password = ?
+                        WHERE
+                            userid = ?;
+                    `,
+                        [newPassword, userId]
+                    )
                     return res.json({
                         success: 'Password updated successfully',
                     })
-                })
-            } else {
-                return res.json({
-                    error: 'Your old password is wrong!!',
-                })
+                } else {
+                    return res.json({
+                        error: 'Your old password is wrong!!',
+                    })
+                }
             }
+        } catch (err) {
+            console.log(err)
         }
     }
 }
