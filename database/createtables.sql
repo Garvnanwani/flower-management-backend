@@ -1,6 +1,6 @@
 --Create user table
 CREATE TABLE users(
-  user_id INT NOT NULL AUTO_INCREMENT,
+  user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
   password VARCHAR(200) NOT NULL,
@@ -8,12 +8,10 @@ CREATE TABLE users(
   phone_number INT NOT NULL,
   user_role TINYINT(1) DEFAULT 0,
   register_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY(user_id),
-  UNIQUE KEY idx_user_email (email),
 );
 -- Create product table
 CREATE TABLE products(
-  product_id VARCHAR(10) NOT NULL,
+  product_id VARCHAR(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   pname VARCHAR(50),
   pdescription VARCHAR(300),
   pprice INT,
@@ -22,14 +20,13 @@ CREATE TABLE products(
   pquantity INT DEFAULT 0,
   prating DECIMAL(10, 2) DEFAULT '0.00',
   pimage VARCHAR(150),
-  PRIMARY KEY(product_id),
-  FULLTEXT KEY idx_ft_product_pname_pdescription (pname, pdescription)
 );
 -- Create product_category table
-CREATE TABLE product_category(
-  product_id VARCHAR(10) NOT NULL,
-  category_id VARCHAR(10) NOT NULL,
-  PRIMARY KEY (product_id, category_id)
+CREATE TABLE categories(
+  category_id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(30) NOT NULL,
+  description VARCHAR(250),
+  category_image VARCHAR(100)
 );
 -- Create orders table
 CREATE TABLE orders (
@@ -84,12 +81,10 @@ CREATE TABLE product_choices (
   choices_value_id INT NOT NULL,
   PRIMARY KEY (product_id, choices_value_id)
 );
--- Create has_production_cart table
-CREATE TABLE has_production_cart(
-  cart_id INT NOT NULL AUTO_INCREMENT,
-  user_id INT NOT NULL,
-  order_id INT NOT NULL,
-  product_id VARCHAR(10) NOT NULL,
-  PRIMARY KEY (cart_id),
-  KEY idx_has_production_cart_id (cart_id)
-);
+CREATE TABLE reviews(
+  review_id INT AUTO_INCREMENT PRIMARY KEY,
+  product_id INT,
+  user_id INT,
+  review VARCHAR(200),
+  rating FLOAT(8, 2)
+)
