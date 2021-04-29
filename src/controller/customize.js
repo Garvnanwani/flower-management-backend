@@ -5,20 +5,25 @@ const getAllData = async (req, res) => {
     try {
         const db = await connect()
 
-        const [Categories, _] = await db.query(`
+        const Categories = await db.query(`
             SELECT * FROM categories
         `)
-        const [Products, _] = await db.query(`
+        const Products = await db.query(`
             SELECT * FROM products
         `)
-        const [Orders, _] = await db.query(`
+        const Orders = await db.query(`
             SELECT * FROM orders
         `)
-        const [Users, _] = await db.query(`
+        const Users = await db.query(`
             SELECT * FROM users
         `)
 
-        return res.json({ Categories, Products, Orders, Users })
+        return res.json({
+            Categories: Categories[0],
+            Products: Products[0],
+            Orders: Orders[0],
+            Users: Users[0],
+        })
     } catch (err) {
         console.log(err)
     }

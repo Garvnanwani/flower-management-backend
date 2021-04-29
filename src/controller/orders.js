@@ -57,7 +57,7 @@ const postCreateOrder = async (req, res) => {
         try {
             const db = await connect()
 
-            const _ = db.query(
+            const result1 = db.query(
                 `
                 INSERT INTO orders (user_id, total_amount) VALUES (?, ?)
             `,
@@ -78,7 +78,7 @@ const postCreateOrder = async (req, res) => {
             })
             let rows = values.toString()
 
-            const _ = db.query(
+            const result2 = db.query(
                 `
                 INSERT INTO order_detail
                     (order_id, product_id, product_name, quantity, product_price)
@@ -116,14 +116,14 @@ const postDeleteOrder = async (req, res) => {
         try {
             const db = await connect()
 
-            const _ = await db.query(
+            const result1 = await db.query(
                 `
                 DELETE FROM orders WHERE order_id = ?
             `,
                 [order_id]
             )
 
-            const _ = await db.query(
+            const result2 = await db.query(
                 `
                 DELETE FROM order_details WHERE order_id = ?
             `,
