@@ -17,11 +17,11 @@ const getAllCategory = async (req, res) => {
 }
 
 const postAddCategory = async (req, res) => {
-    let { cName, cDescription, cStatus } = req.body
-    let cImage = req.file.filename
-    const filePath = `../server/public/uploads/categories/${cImage}`
+    let { name, description } = req.body
+    let category_image = req.file.filename
+    const filePath = `./public/uploads/categories/${category_image}`
 
-    if (!cName || !cDescription || !cStatus || !cImage) {
+    if (!name || !description || !category_image) {
         fs.unlink(filePath, (err) => {
             if (err) {
                 console.log(err)
@@ -29,12 +29,17 @@ const postAddCategory = async (req, res) => {
             return res.json({ error: 'All filled must be required' })
         })
     } else {
-        cName = toTitleCase(cName)
+        name = toTitleCase(name)
         try {
-            let checkCategoryExists = await categoryModel.findOne({
-                cName: cName,
-            })
-            if (checkCategoryExists) {
+            const db = await connect()
+
+            const [result, _] = await db.query(
+                `
+                SELECT * FROM categories WHERE name=?
+            `,
+                [name]
+            )
+            if (result.length > 0) {
                 fs.unlink(filePath, (err) => {
                     if (err) {
                         console.log(err)
@@ -42,18 +47,15 @@ const postAddCategory = async (req, res) => {
                     return res.json({ error: 'Category already exists' })
                 })
             } else {
-                let newCategory = new categoryModel({
-                    cName,
-                    cDescription,
-                    cStatus,
-                    cImage,
-                })
-                await newCategory.save((err) => {
-                    if (!err) {
-                        return res.json({
-                            success: 'Category created successfully',
-                        })
-                    }
+                const [result, _] = await db.query(
+                    `
+                INSERT INTO categories (name, description) VALUES (?, ?)
+                `,
+                    [name, description]
+                )
+
+                return res.json({
+                    success: 'Category created successfully',
                 })
             }
         } catch (err) {
