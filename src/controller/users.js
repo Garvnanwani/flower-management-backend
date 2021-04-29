@@ -1,20 +1,20 @@
 const bcrypt = require('bcryptjs')
 const connect = require('../config/db')
 
-const getAllUser = async (req, res) => {
-    try {
-        let Users = await userModel
-            .find({})
-            .populate('allProduct.id', 'pName pImages pPrice')
-            .populate('user', 'name email')
-            .sort({ _id: -1 })
-        if (Users) {
-            return res.json({ Users })
-        }
-    } catch (err) {
-        console.log(err)
-    }
-}
+// const getAllUser = async (req, res) => {
+//     try {
+//         let Users = await userModel
+//             .find({})
+//             .populate('allProduct.id', 'pName pImages pPrice')
+//             .populate('user', 'name email')
+//             .sort({ _id: -1 })
+//         if (Users) {
+//             return res.json({ Users })
+//         }
+//     } catch (err) {
+//         console.log(err)
+//     }
+// }
 
 const getSingleUser = async (req, res) => {
     let { uId } = req.body

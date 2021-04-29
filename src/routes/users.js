@@ -9,7 +9,7 @@ const {
     // getDeleteUser,
 } = require('../controller/users')
 
-router.post('/signle-user', getSingleUser)
+router.post('/single-user', getSingleUser)
 router.post('/edit-user', postEditUser)
 router.post('/change-password', changePassword)
 
