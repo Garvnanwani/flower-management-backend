@@ -242,6 +242,8 @@ const getSingleProduct = async (req, res) => {
             return res.json({ Product: result[0] })
         } catch (err) {
             console.log(err)
+
+            console.log(err)
         }
     }
 }
@@ -265,6 +267,8 @@ const getProductByCategory = async (req, res) => {
 
             return res.json({ Products: result })
         } catch (err) {
+            console.log(err)
+
             return res.json({ error: 'Search product wrong' })
         }
     }
@@ -289,6 +293,8 @@ const getProductByPrice = async (req, res) => {
 
             return res.json({ Products: result })
         } catch (err) {
+            console.log(err)
+
             return res.json({ error: 'Filter product wrong' })
         }
     }
@@ -311,6 +317,8 @@ const getWishProduct = async (req, res) => {
 
             return res.json({ Products: result })
         } catch (err) {
+            console.log(err)
+
             return res.json({ error: 'Filter product wrong' })
         }
     }
@@ -333,75 +341,29 @@ const getCartProduct = async (req, res) => {
 
             return res.json({ Products: result })
         } catch (err) {
+            console.log(err)
             return res.json({ error: 'Cart product wrong' })
         }
     }
 }
 
 const postAddReview = async (req, res) => {
-    let { productid, uId, rating, review } = req.body
-    if (!productid || !rating || !review || !uId) {
+    let { productid, userid, rating, review } = req.body
+    if (!productid || !rating || !review || !userid) {
         return res.json({ error: 'All fields must be required' })
     } else {
-        let checkReviewRatingExists = await productModel.findOne({
-            _id: productid,
-        })
-        if (checkReviewRatingExists.pRatingsReviews.length > 0) {
-            checkReviewRatingExists.pRatingsReviews.map((item) => {
-                if (item.user === uId) {
-                    return res.json({
-                        error: 'Your already reviewd the product',
-                    })
-                } else {
-                    try {
-                        let newRatingReview = productModel.findByIdAndUpdate(
-                            productid,
-                            {
-                                $push: {
-                                    pRatingsReviews: {
-                                        review: review,
-                                        user: uId,
-                                        rating: rating,
-                                    },
-                                },
-                            }
-                        )
-                        newRatingReview.exec((err, result) => {
-                            if (err) {
-                                console.log(err)
-                            }
-                            return res.json({
-                                success: 'Thanks for your review',
-                            })
-                        })
-                    } catch (err) {
-                        return res.json({ error: 'Cart product wrong' })
-                    }
-                }
-            })
-        } else {
-            try {
-                let newRatingReview = productModel.findByIdAndUpdate(
-                    productid,
-                    {
-                        $push: {
-                            pRatingsReviews: {
-                                review: review,
-                                user: uId,
-                                rating: rating,
-                            },
-                        },
-                    }
-                )
-                newRatingReview.exec((err, result) => {
-                    if (err) {
-                        console.log(err)
-                    }
-                    return res.json({ success: 'Thanks for your review' })
-                })
-            } catch (err) {
-                return res.json({ error: 'Cart product wrong' })
-            }
+        try {
+            const db = await connect()
+
+            const [result, _] = await db.query(
+                `
+                INSERT INTO reviews (productid, userid, rating, review) VALUES (?,?,?,?)
+            `,
+                [productid, userid, rating, review]
+            )
+        } catch (err) {
+            console.log(err)
+            res.json({ error: 'Cart Product Wrong' })
         }
     }
 }
