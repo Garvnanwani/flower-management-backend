@@ -35,7 +35,7 @@ const postEditUser = async (req, res) => {
                 SET
                     name = ?
                 WHERE
-                    userid = ?;
+                    userid = ?
             `,
                 [name, userId]
             )
@@ -78,7 +78,7 @@ const changePassword = async (req, res) => {
                         SET
                             password = ?
                         WHERE
-                            userid = ?;
+                            userid = ?
                     `,
                         [newPassword, userId]
                     )

@@ -19,14 +19,14 @@ const getAllCategory = async (req, res) => {
 const postAddCategory = async (req, res) => {
     let { name, description } = req.body
     let category_image = req.file.filename
-    const filePath = `./public/uploads/categories/${category_image}`
+    // const filePath = `./public/uploads/categories/${category_image}`
 
     if (!name || !description || !category_image) {
         fs.unlink(filePath, (err) => {
             if (err) {
                 console.log(err)
             }
-            return res.json({ error: 'All filled must be required' })
+            return res.json({ error: 'All fields must be required' })
         })
     } else {
         name = toTitleCase(name)
@@ -65,46 +65,61 @@ const postAddCategory = async (req, res) => {
 }
 
 const postEditCategory = async (req, res) => {
-    let { cId, cDescription, cStatus } = req.body
-    if (!cId || !cDescription || !cStatus) {
+    let { category_id, description } = req.body
+    if (!category_id || !description) {
         return res.json({ error: 'All filled must be required' })
     }
     try {
-        let editCategory = categoryModel.findByIdAndUpdate(cId, {
-            cDescription,
-            cStatus,
-            updatedAt: Date.now(),
-        })
-        let edit = await editCategory.exec()
-        if (edit) {
-            return res.json({ success: 'Category edit successfully' })
-        }
+        const db = await connect()
+
+        const [result, _] = await db.query(
+            `
+        UPDATE categories
+        SET
+            description = ?
+        WHERE
+            category_id = ?
+        `,
+            [description, category_id]
+        )
+        return res.json({ success: 'Category edit successfully' })
     } catch (err) {
         console.log(err)
     }
 }
 
 const getDeleteCategory = async (req, res) => {
-    let { cId } = req.body
-    if (!cId) {
+    let { category_id } = req.body
+    if (!category_id) {
         return res.json({ error: 'All filled must be required' })
     } else {
         try {
-            let deletedCategoryFile = await categoryModel.findById(cId)
-            const filePath = `../server/public/uploads/categories/${deletedCategoryFile.cImage}`
+            const db = await connect()
 
-            let deleteCategory = await categoryModel.findByIdAndDelete(cId)
-            if (deleteCategory) {
-                // Delete Image from uploads -> categories folder
-                fs.unlink(filePath, (err) => {
-                    if (err) {
-                        console.log(err)
-                    }
-                    return res.json({
-                        success: 'Category deleted successfully',
-                    })
-                })
-            }
+            // let deletedCategoryFile = await categoryModel.findById(category_id)
+            // const filePath = `./public/uploads/categories/${deletedCategoryFile.image}`
+
+            const [result, _] = await db.query(
+                `
+                DELETE FROM categories WHERE category_id = ?
+            `,
+                [category_id]
+            )
+
+            // if (deleteCategory) {
+            //     // Delete Image from uploads -> categories folder
+            //     fs.unlink(filePath, (err) => {
+            //         if (err) {
+            //             console.log(err)
+            //         }
+            //         return res.json({
+            //             success: 'Category deleted successfully',
+            //         })
+            //     })
+            // }
+            return res.json({
+                success: 'Category deleted successfully',
+            })
         } catch (err) {
             console.log(err)
         }
