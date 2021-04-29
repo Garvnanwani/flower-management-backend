@@ -67,7 +67,7 @@ const postAddProduct = async (req, res) => {
         return res.json({ error: 'All fields must be required' })
     }
     // Validate Name and description
-    else if (pName.length > 255 || pDescription.length > 3000) {
+    else if (pname.length > 255 || pdescription.length > 3000) {
         deleteImages(images, 'file')
         return res.json({
             error: 'Name 255 & Description must not be 3000 charecter long',
@@ -119,70 +119,74 @@ const postAddProduct = async (req, res) => {
 const postEditProduct = async (req, res) => {
     let {
         productid,
-        pName,
-        pDescription,
-        pPrice,
-        pQuantity,
-        pCategory,
-        pOffer,
-        pStatus,
-        pImages,
+        pname,
+        pdescription,
+        pprice,
+        pquantity,
+        pcategory,
+        pimages,
     } = req.body
     let editImages = req.files
 
     // Validate other fileds
     if (
-        !productid |
-        !pName |
-        !pDescription |
-        !pPrice |
-        !pQuantity |
-        !pCategory |
-        !pOffer |
-        !pStatus
+        !productid ||
+        !pname ||
+        !pdescription ||
+        !pprice ||
+        !pquantity ||
+        !pcategory
     ) {
         return res.json({ error: 'All fields must be required' })
     }
     // Validate Name and description
-    else if (pName.length > 255 || pDescription.length > 3000) {
+    else if (pname.length > 255 || pdescription.length > 3000) {
         return res.json({
             error: 'Name 255 & Description must not be 3000 charecter long',
         })
     }
     // Validate Update Images
-    else if (editImages && editImages.length == 1) {
-        deleteImages(editImages, 'file')
-        return res.json({ error: 'Must need to provide 2 images' })
-    } else {
-        let editData = {
-            pName,
-            pDescription,
-            pPrice,
-            pQuantity,
-            pCategory,
-            pOffer,
-            pStatus,
-        }
-        if (editImages.length == 2) {
-            let allEditImages = []
-            for (const img of editImages) {
-                allEditImages.push(img.filename)
-            }
-            editData = { ...editData, pImages: allEditImages }
-            deleteImages(pImages.split(','), 'string')
-        }
-        try {
-            let editProduct = productModel.findByIdAndUpdate(
+    // else if (editImages && editImages.length == 1) {
+    //     deleteImages(editImages, 'file')
+    //     return res.json({ error: 'Must need to provide 2 images' })
+    // }
+    else {
+        // if (editImages.length == 2) {
+        //     let allEditImages = []
+        //     for (const img of editImages) {
+        //         allEditImages.push(img.filename)
+        //     }
+        //     editData = { ...editData, pimages: allEditImages }
+        //     deleteImages(pimages.split(','), 'string')
+    }
+    try {
+        const db = await connect()
+
+        const [result, _] = await db.query(
+            `
+            UPDATE products
+            SET productid : ?
+                pname : ?
+                pdescription : ?
+                pprice : ?
+                pquantity : ?
+                pcategory : ?
+                pimages : ?
+            `,
+            [
                 productid,
-                editData
-            )
-            editProduct.exec((err) => {
-                if (err) console.log(err)
-                return res.json({ success: 'Product edit successfully' })
-            })
-        } catch (err) {
-            console.log(err)
-        }
+                pname,
+                pdescription,
+                pprice,
+                pquantity,
+                pcategory,
+                pimages,
+            ]
+        )
+
+        return res.json({ success: 'Product edit successfully' })
+    } catch (err) {
+        console.log(err)
     }
 }
 
@@ -192,13 +196,21 @@ const getDeleteProduct = async (req, res) => {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            let deleteProductObj = await productModel.findById(productid)
-            let deleteProduct = await productModel.findByIdAndDelete(productid)
-            if (deleteProduct) {
-                // Delete Image from uploads -> products folder
-                deleteImages(deleteProductObj.pImages, 'string')
-                return res.json({ success: 'Product deleted successfully' })
-            }
+            const db = await connect()
+
+            const [result, _] = await db.query(
+                `
+                DELETE FROM products WHERE productid = ?
+            `,
+                [productid]
+            )
+
+            return res.json({ success: 'Product deleted successfully' })
+
+            // if (deleteProduct) {
+            //     // Delete Image from uploads -> products folder
+            //     deleteImages(deleteProductObj.pimages, 'string')
+            // }
         } catch (err) {
             console.log(err)
         }
@@ -224,7 +236,7 @@ const getSingleProduct = async (req, res) => {
 
             // let singleProduct = await productModel
             //     .findById(productid)
-            //     .populate('pCategory', 'cName')
+            //     .populate('pcategory', 'cName')
             //     .populate('pRatingsReviews.user', 'name email userImage')
 
             return res.json({ Product: result[0] })
