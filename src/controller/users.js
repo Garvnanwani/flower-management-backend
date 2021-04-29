@@ -22,19 +22,28 @@ const getSingleUser = async (req, res) => {
 }
 
 const postEditUser = async (req, res) => {
-    let { uId, name, phoneNumber } = req.body
-    if (!uId || !name || !phoneNumber) {
+    let { userId, name } = req.body
+    if (!userId || !name) {
         return res.json({ message: 'All filled must be required' })
     } else {
-        let currentUser = userModel.findByIdAndUpdate(uId, {
-            name: name,
-            phoneNumber: phoneNumber,
-            updatedAt: Date.now(),
-        })
-        currentUser.exec((err, result) => {
-            if (err) console.log(err)
+        try {
+            const db = await connect()
+
+            const [result, _] = await db.query(
+                `
+                UPDATE users
+                SET
+                    name = ?
+                WHERE
+                    userid = ?;
+            `,
+                [name, userId]
+            )
+
             return res.json({ success: 'User updated successfully' })
-        })
+        } catch (err) {
+            console.log(err)
+        }
     }
 }
 
