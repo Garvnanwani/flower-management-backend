@@ -34,7 +34,7 @@ const getAllProduct = async (req, res) => {
             SELECT * FROM products
         `)
 
-        res.json({ users: result })
+        res.json({ Products: result })
     } catch {
         res.status(404)
         console.log(err)
