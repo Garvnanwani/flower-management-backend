@@ -264,12 +264,16 @@ const getWishProduct = async (req, res) => {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            let wishProducts = await productModel.find({
-                _id: { $in: productArray },
-            })
-            if (wishProducts) {
-                return res.json({ Products: wishProducts })
-            }
+            const db = await connect()
+
+            const [result, _] = await db.query(
+                `
+                SELECT * FROM products WHERE productid IN ?
+            `,
+                [productArray]
+            )
+
+            return res.json({ Products: result })
         } catch (err) {
             return res.json({ error: 'Filter product wrong' })
         }
