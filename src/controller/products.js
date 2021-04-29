@@ -233,17 +233,25 @@ const getSingleProduct = async (req, res) => {
 }
 
 const getProductByCategory = async (req, res) => {
-    let { catId } = req.body
-    if (!catId) {
+    let { category_id } = req.body
+    if (!category_id) {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            let products = await productModel
-                .find({ pCategory: catId })
-                .populate('pCategory', 'cName')
-            if (products) {
-                return res.json({ Products: products })
-            }
+            //also return category name
+
+            const db = await connect()
+
+            const [result, _] = await db.query(
+                `
+                SELECT products.pcategory, categories.name FROM categories
+                INNER JOIN products ON categories.name = products.pcategory;
+                WHERE categories.category_id = ?
+            `,
+                [category_id]
+            )
+
+            return res.json({ Products: result })
         } catch (err) {
             return res.json({ error: 'Search product wrong' })
         }
@@ -256,13 +264,19 @@ const getProductByPrice = async (req, res) => {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            let products = await productModel
-                .find({ pPrice: { $lt: price } })
-                .populate('pCategory', 'cName')
-                .sort({ pPrice: -1 })
-            if (products) {
-                return res.json({ Products: products })
-            }
+            //also return category name
+            const db = await connect()
+
+            const [result, _] = await db.query(
+                `
+                SELECT products.pcategory, categories.name FROM categories
+                INNER JOIN products ON categories.name = products.pcategory;
+                WHERE products.pprice < ?
+            `,
+                [price]
+            )
+
+            return res.json({ Products: result })
         } catch (err) {
             return res.json({ error: 'Filter product wrong' })
         }
