@@ -47,47 +47,66 @@ const postCreateOrder = async (req, res) => {
     if (
         !allProduct ||
         !user ||
-        !amount ||
-        !transactionId ||
-        !address ||
-        !phone
+        !amount
+        // !transactionId ||
+        // !address ||
+        // !phone
     ) {
         return res.json({ message: 'All fields must be required' })
     } else {
         try {
-            let newOrder = new orderModel({
-                allProduct,
-                user,
-                amount,
-                transactionId,
-                address,
-                phone,
+            const db = await connect()
+
+            const _ = db.query(
+                `
+                INSERT INTO orders (user_id, total_amount) VALUES (?, ?)
+            `,
+                [user, amount]
+            )
+
+            let values = []
+            allProduct.forEach((order_item) => {
+                let row = ''
+                row = `(
+                        ${order_item.order_id},
+                        ${order_item.product_id},
+                        ${order_item.product_name},
+                        ${order_item.quantity},
+                        ${order_item.product_price},
+                )`
+                values.push(row)
             })
-            let save = await newOrder.save()
-            if (save) {
-                return res.json({ success: 'Order created successfully' })
-            }
+            let rows = values.toString()
+
+            const _ = db.query(
+                `
+                INSERT INTO order_detail
+                    (order_id, product_id, product_name, quantity, product_price)
+                VALUES ?`,
+                [rows]
+            )
+            return res.json({ success: 'Order created successfully' })
         } catch (err) {
             return res.json({ error: error })
         }
     }
 }
 
-const postUpdateOrder = async (req, res) => {
-    let { order_id, status } = req.body
-    if (!order_id || !status) {
-        return res.json({ message: 'All fields must be required' })
-    } else {
-        let currentOrder = orderModel.findByIdAndUpdate(order_id, {
-            status: status,
-            updatedAt: Date.now(),
-        })
-        currentOrder.exec((err, result) => {
-            if (err) console.log(err)
-            return res.json({ success: 'Order updated successfully' })
-        })
-    }
-}
+// const postUpdateOrder = async (req, res) => {
+//     let { order_id } = req.body
+//     if (!order_id || !status) {
+//         return res.json({ message: 'All fields must be required' })
+//     } else {
+//         let currentOrder = orderModel.findByIdAndUpdate(order_id, {
+//             status: status,
+//             updatedAt: Date.now(),
+//         })
+//         currentOrder.exec((err, result) => {
+//             if (err) console.log(err)
+//             return res.json({ success: 'Order updated successfully' })
+//         })
+//     }
+// }
 
 const postDeleteOrder = async (req, res) => {
     let { order_id } = req.body
@@ -121,7 +140,7 @@ module.exports = {
     getAllOrders,
     getOrderByUser,
     postCreateOrder,
-    postUpdateOrder,
+    // postUpdateOrder,
     postDeleteOrder,
 }
 
