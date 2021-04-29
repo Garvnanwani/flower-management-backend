@@ -5,7 +5,7 @@ const getSingleUser = async (req, res) => {
     let { userid } = req.body
 
     if (!userid) {
-        return res.json({ error: 'All filled must be required' })
+        return res.json({ error: 'All fields must be required' })
     }
     try {
         const db = await connect()
@@ -24,7 +24,7 @@ const getSingleUser = async (req, res) => {
 const postEditUser = async (req, res) => {
     let { userid, name } = req.body
     if (!userid || !name) {
-        return res.json({ message: 'All filled must be required' })
+        return res.json({ message: 'All fields must be required' })
     } else {
         try {
             const db = await connect()
@@ -50,7 +50,7 @@ const postEditUser = async (req, res) => {
 const changePassword = async (req, res) => {
     let { userid, oldPassword, newPassword } = req.body
     if (!userid || !oldPassword || !newPassword) {
-        return res.json({ message: 'All filled must be required' })
+        return res.json({ message: 'All fields must be required' })
     } else {
         try {
             const db = await connect()
@@ -109,7 +109,7 @@ module.exports = {
 // const getDeleteUser = async (req, res) => {
 //     let { oId, status } = req.body
 //     if (!oId || !status) {
-//         return res.json({ message: 'All filled must be required' })
+//         return res.json({ message: 'All fields must be required' })
 //     } else {
 //         let currentUser = userModel.findByIdAndUpdate(oId, {
 //             status: status,
@@ -132,7 +132,7 @@ module.exports = {
 // !address ||
 // !phone
 //     ) {
-//         return res.json({ message: 'All filled must be required' })
+//         return res.json({ message: 'All fields must be required' })
 //     } else {
 //         try {
 //             let newUser = new userModel({

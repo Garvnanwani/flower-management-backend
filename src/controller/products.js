@@ -64,7 +64,7 @@ const postAddProduct = async (req, res) => {
         !prating
     ) {
         deleteImages(images, 'file')
-        return res.json({ error: 'All filled must be required' })
+        return res.json({ error: 'All fields must be required' })
     }
     // Validate Name and description
     else if (pName.length > 255 || pDescription.length > 3000) {
@@ -141,7 +141,7 @@ const postEditProduct = async (req, res) => {
         !pOffer |
         !pStatus
     ) {
-        return res.json({ error: 'All filled must be required' })
+        return res.json({ error: 'All fields must be required' })
     }
     // Validate Name and description
     else if (pName.length > 255 || pDescription.length > 3000) {
@@ -186,7 +186,7 @@ const postEditProduct = async (req, res) => {
 const getDeleteProduct = async (req, res) => {
     let { pId } = req.body
     if (!pId) {
-        return res.json({ error: 'All filled must be required' })
+        return res.json({ error: 'All fields must be required' })
     } else {
         try {
             let deleteProductObj = await productModel.findById(pId)
@@ -205,7 +205,7 @@ const getDeleteProduct = async (req, res) => {
 const getSingleProduct = async (req, res) => {
     let { pId } = req.body
     if (!pId) {
-        return res.json({ error: 'All filled must be required' })
+        return res.json({ error: 'All fields must be required' })
     } else {
         try {
             let singleProduct = await productModel
@@ -224,7 +224,7 @@ const getSingleProduct = async (req, res) => {
 const getProductByCategory = async (req, res) => {
     let { catId } = req.body
     if (!catId) {
-        return res.json({ error: 'All filled must be required' })
+        return res.json({ error: 'All fields must be required' })
     } else {
         try {
             let products = await productModel
@@ -242,7 +242,7 @@ const getProductByCategory = async (req, res) => {
 const getProductByPrice = async (req, res) => {
     let { price } = req.body
     if (!price) {
-        return res.json({ error: 'All filled must be required' })
+        return res.json({ error: 'All fields must be required' })
     } else {
         try {
             let products = await productModel
@@ -261,7 +261,7 @@ const getProductByPrice = async (req, res) => {
 const getWishProduct = async (req, res) => {
     let { productArray } = req.body
     if (productArray.length === 0) {
-        return res.json({ error: 'All filled must be required' })
+        return res.json({ error: 'All fields must be required' })
     } else {
         try {
             let wishProducts = await productModel.find({
@@ -279,7 +279,7 @@ const getWishProduct = async (req, res) => {
 const getCartProduct = async (req, res) => {
     let { productArray } = req.body
     if (productArray.length === 0) {
-        return res.json({ error: 'All filled must be required' })
+        return res.json({ error: 'All fields must be required' })
     } else {
         try {
             let cartProducts = await productModel.find({
@@ -297,7 +297,7 @@ const getCartProduct = async (req, res) => {
 const postAddReview = async (req, res) => {
     let { pId, uId, rating, review } = req.body
     if (!pId || !rating || !review || !uId) {
-        return res.json({ error: 'All filled must be required' })
+        return res.json({ error: 'All fields must be required' })
     } else {
         let checkReviewRatingExists = await productModel.findOne({
             _id: pId,
@@ -362,7 +362,7 @@ const postAddReview = async (req, res) => {
 const deleteReview = async (req, res) => {
     let { rId, pId } = req.body
     if (!rId) {
-        return res.json({ message: 'All filled must be required' })
+        return res.json({ message: 'All fields must be required' })
     } else {
         try {
             let reviewDelete = productModel.findByIdAndUpdate(pId, {

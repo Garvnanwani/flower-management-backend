@@ -67,7 +67,7 @@ const postAddCategory = async (req, res) => {
 const postEditCategory = async (req, res) => {
     let { category_id, description } = req.body
     if (!category_id || !description) {
-        return res.json({ error: 'All filled must be required' })
+        return res.json({ error: 'All fields must be required' })
     }
     try {
         const db = await connect()
@@ -91,7 +91,7 @@ const postEditCategory = async (req, res) => {
 const getDeleteCategory = async (req, res) => {
     let { category_id } = req.body
     if (!category_id) {
-        return res.json({ error: 'All filled must be required' })
+        return res.json({ error: 'All fields must be required' })
     } else {
         try {
             const db = await connect()

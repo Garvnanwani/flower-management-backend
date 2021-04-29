@@ -8,7 +8,7 @@ const getAllOrders = async (req, res) => {
             SELECT orders.order_id, users.name, users.email, order_details.product_name ,order_details.product_price
             FROM ((orders
             INNER JOIN users ON orders.user_id = users.userid)
-            INNER JOIN order_details ON orders.order_id = order_details.order_id);
+            INNER JOIN order_details ON orders.order_id = order_details.order_id)
         `)
 
         return res.json({ Orders: result })
@@ -18,19 +18,24 @@ const getAllOrders = async (req, res) => {
 }
 
 const getOrderByUser = async (req, res) => {
-    let { uId } = req.body
-    if (!uId) {
-        return res.json({ message: 'All filled must be required' })
+    let { userid } = req.body
+    if (!userid) {
+        return res.json({ message: 'All fields must be required' })
     } else {
         try {
-            let Order = await orderModel
-                .find({ user: uId })
-                .populate('allProduct.id', 'pName pImages pPrice')
-                .populate('user', 'name email')
-                .sort({ _id: -1 })
-            if (Order) {
-                return res.json({ Order })
-            }
+            const db = await connect()
+
+            const [result, _] = await db.query(
+                `
+            SELECT orders.order_id, users.name, users.email, order_details.product_name ,order_details.product_price
+            FROM ((orders
+            INNER JOIN users ON orders.user_id = users.userid)
+            INNER JOIN order_details ON orders.order_id = order_details.order_id)
+            WHERE users.userid = ?
+        `,
+                [userid]
+            )
+            return res.json({ Order: result })
         } catch (err) {
             console.log(err)
         }
@@ -47,7 +52,7 @@ const postCreateOrder = async (req, res) => {
         !address ||
         !phone
     ) {
-        return res.json({ message: 'All filled must be required' })
+        return res.json({ message: 'All fields must be required' })
     } else {
         try {
             let newOrder = new orderModel({
@@ -71,7 +76,7 @@ const postCreateOrder = async (req, res) => {
 const postUpdateOrder = async (req, res) => {
     let { oId, status } = req.body
     if (!oId || !status) {
-        return res.json({ message: 'All filled must be required' })
+        return res.json({ message: 'All fields must be required' })
     } else {
         let currentOrder = orderModel.findByIdAndUpdate(oId, {
             status: status,
@@ -87,7 +92,7 @@ const postUpdateOrder = async (req, res) => {
 const postDeleteOrder = async (req, res) => {
     let { oId } = req.body
     if (!oId) {
-        return res.json({ error: 'All filled must be required' })
+        return res.json({ error: 'All fields must be required' })
     } else {
         try {
             let deleteOrder = await orderModel.findByIdAndDelete(oId)
