@@ -369,20 +369,20 @@ const postAddReview = async (req, res) => {
 }
 
 const deleteReview = async (req, res) => {
-    let { rId, productid } = req.body
-    if (!rId) {
+    let { review_id, productid } = req.body
+    if (!review_id) {
         return res.json({ message: 'All fields must be required' })
     } else {
         try {
-            let reviewDelete = productModel.findByIdAndUpdate(productid, {
-                $pull: { pRatingsReviews: { _id: rId } },
-            })
-            reviewDelete.exec((err, result) => {
-                if (err) {
-                    console.log(err)
-                }
-                return res.json({ success: 'Your review is deleted' })
-            })
+            const db = await connect()
+
+            const [result, _] = await db.query(
+                `
+                DELETE FROM reviews WHERE review_id = ?
+            `,
+                [review_id]
+            )
+            return res.json({ success: 'Your review is deleted' })
         } catch (err) {
             console.log(err)
         }
