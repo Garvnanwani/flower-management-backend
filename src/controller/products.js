@@ -118,7 +118,7 @@ const postAddProduct = async (req, res) => {
 
 const postEditProduct = async (req, res) => {
     let {
-        pId,
+        productid,
         pName,
         pDescription,
         pPrice,
@@ -132,7 +132,7 @@ const postEditProduct = async (req, res) => {
 
     // Validate other fileds
     if (
-        !pId |
+        !productid |
         !pName |
         !pDescription |
         !pPrice |
@@ -172,7 +172,10 @@ const postEditProduct = async (req, res) => {
             deleteImages(pImages.split(','), 'string')
         }
         try {
-            let editProduct = productModel.findByIdAndUpdate(pId, editData)
+            let editProduct = productModel.findByIdAndUpdate(
+                productid,
+                editData
+            )
             editProduct.exec((err) => {
                 if (err) console.log(err)
                 return res.json({ success: 'Product edit successfully' })
@@ -184,13 +187,13 @@ const postEditProduct = async (req, res) => {
 }
 
 const getDeleteProduct = async (req, res) => {
-    let { pId } = req.body
-    if (!pId) {
+    let { productid } = req.body
+    if (!productid) {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            let deleteProductObj = await productModel.findById(pId)
-            let deleteProduct = await productModel.findByIdAndDelete(pId)
+            let deleteProductObj = await productModel.findById(productid)
+            let deleteProduct = await productModel.findByIdAndDelete(productid)
             if (deleteProduct) {
                 // Delete Image from uploads -> products folder
                 deleteImages(deleteProductObj.pImages, 'string')
@@ -203,18 +206,26 @@ const getDeleteProduct = async (req, res) => {
 }
 
 const getSingleProduct = async (req, res) => {
-    let { pId } = req.body
-    if (!pId) {
+    let { productid } = req.body
+    if (!productid) {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            let singleProduct = await productModel
-                .findById(pId)
-                .populate('pCategory', 'cName')
-                .populate('pRatingsReviews.user', 'name email userImage')
-            if (singleProduct) {
-                return res.json({ Product: singleProduct })
-            }
+            const db = await connect()
+
+            const [result, _] = await db.query(
+                `
+                SELECT pcategory, pname FROM products WHERE productid = ?
+            `,
+                [productid]
+            )
+
+            // let singleProduct = await productModel
+            //     .findById(productid)
+            //     .populate('pCategory', 'cName')
+            //     .populate('pRatingsReviews.user', 'name email userImage')
+
+            return res.json({ Product: singleProduct })
         } catch (err) {
             console.log(err)
         }
@@ -303,12 +314,12 @@ const getCartProduct = async (req, res) => {
 }
 
 const postAddReview = async (req, res) => {
-    let { pId, uId, rating, review } = req.body
-    if (!pId || !rating || !review || !uId) {
+    let { productid, uId, rating, review } = req.body
+    if (!productid || !rating || !review || !uId) {
         return res.json({ error: 'All fields must be required' })
     } else {
         let checkReviewRatingExists = await productModel.findOne({
-            _id: pId,
+            _id: productid,
         })
         if (checkReviewRatingExists.pRatingsReviews.length > 0) {
             checkReviewRatingExists.pRatingsReviews.map((item) => {
@@ -319,7 +330,7 @@ const postAddReview = async (req, res) => {
                 } else {
                     try {
                         let newRatingReview = productModel.findByIdAndUpdate(
-                            pId,
+                            productid,
                             {
                                 $push: {
                                     pRatingsReviews: {
@@ -345,15 +356,18 @@ const postAddReview = async (req, res) => {
             })
         } else {
             try {
-                let newRatingReview = productModel.findByIdAndUpdate(pId, {
-                    $push: {
-                        pRatingsReviews: {
-                            review: review,
-                            user: uId,
-                            rating: rating,
+                let newRatingReview = productModel.findByIdAndUpdate(
+                    productid,
+                    {
+                        $push: {
+                            pRatingsReviews: {
+                                review: review,
+                                user: uId,
+                                rating: rating,
+                            },
                         },
-                    },
-                })
+                    }
+                )
                 newRatingReview.exec((err, result) => {
                     if (err) {
                         console.log(err)
@@ -368,12 +382,12 @@ const postAddReview = async (req, res) => {
 }
 
 const deleteReview = async (req, res) => {
-    let { rId, pId } = req.body
+    let { rId, productid } = req.body
     if (!rId) {
         return res.json({ message: 'All fields must be required' })
     } else {
         try {
-            let reviewDelete = productModel.findByIdAndUpdate(pId, {
+            let reviewDelete = productModel.findByIdAndUpdate(productid, {
                 $pull: { pRatingsReviews: { _id: rId } },
             })
             reviewDelete.exec((err, result) => {
