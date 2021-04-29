@@ -1,6 +1,29 @@
 const fs = require('fs')
 const connect = require('../config/db')
 
+const getAllData = async (req, res) => {
+    try {
+        const db = await connect()
+
+        const [Categories, _] = await db.query(`
+            SELECT * FROM categories
+        `)
+        const [Products, _] = await db.query(`
+            SELECT * FROM products
+        `)
+        const [Orders, _] = await db.query(`
+            SELECT * FROM orders
+        `)
+        const [Users, _] = await db.query(`
+            SELECT * FROM users
+        `)
+
+        return res.json({ Categories, Products, Orders, Users })
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 const getImages = async (req, res) => {
     try {
         let Images = await customizeModel.find({})
@@ -54,20 +77,6 @@ const deleteSlideImage = async (req, res) => {
         } catch (err) {
             console.log(err)
         }
-    }
-}
-
-const getAllData = async (req, res) => {
-    try {
-        let Categories = await categoryModel.find({}).count()
-        let Products = await productModel.find({}).count()
-        let Orders = await orderModel.find({}).count()
-        let Users = await userModel.find({}).count()
-        if (Categories && Products && Orders) {
-            return res.json({ Categories, Products, Orders, Users })
-        }
-    } catch (err) {
-        console.log(err)
     }
 }
 
