@@ -1,21 +1,6 @@
 const bcrypt = require('bcryptjs')
 const connect = require('../config/db')
 
-// const getAllUser = async (req, res) => {
-//     try {
-//         let Users = await userModel
-//             .find({})
-//             .populate('allProduct.id', 'pName pImages pPrice')
-//             .populate('user', 'name email')
-//             .sort({ _id: -1 })
-//         if (Users) {
-//             return res.json({ Users })
-//         }
-//     } catch (err) {
-//         console.log(err)
-//     }
-// }
-
 const getSingleUser = async (req, res) => {
     let { uId } = req.body
     if (!uId) {
@@ -34,37 +19,6 @@ const getSingleUser = async (req, res) => {
     }
 }
 
-const postAddUser = async (req, res) => {
-    let { allProduct, user, amount, transactionId, address, phone } = req.body
-    if (
-        !allProduct ||
-        !user ||
-        !amount ||
-        !transactionId ||
-        !address ||
-        !phone
-    ) {
-        return res.json({ message: 'All filled must be required' })
-    } else {
-        try {
-            let newUser = new userModel({
-                allProduct,
-                user,
-                amount,
-                transactionId,
-                address,
-                phone,
-            })
-            let save = await newUser.save()
-            if (save) {
-                return res.json({ success: 'User created successfully' })
-            }
-        } catch (err) {
-            return res.json({ error: error })
-        }
-    }
-}
-
 const postEditUser = async (req, res) => {
     let { uId, name, phoneNumber } = req.body
     if (!uId || !name || !phoneNumber) {
@@ -73,22 +27,6 @@ const postEditUser = async (req, res) => {
         let currentUser = userModel.findByIdAndUpdate(uId, {
             name: name,
             phoneNumber: phoneNumber,
-            updatedAt: Date.now(),
-        })
-        currentUser.exec((err, result) => {
-            if (err) console.log(err)
-            return res.json({ success: 'User updated successfully' })
-        })
-    }
-}
-
-const getDeleteUser = async (req, res) => {
-    let { oId, status } = req.body
-    if (!oId || !status) {
-        return res.json({ message: 'All filled must be required' })
-    } else {
-        let currentUser = userModel.findByIdAndUpdate(oId, {
-            status: status,
             updatedAt: Date.now(),
         })
         currentUser.exec((err, result) => {
@@ -134,10 +72,72 @@ const changePassword = async (req, res) => {
 }
 
 module.exports = {
-    getAllUser,
+    // getAllUser,
     getSingleUser,
-    postAddUser,
+    // postAddUser,
     postEditUser,
-    getDeleteUser,
+    // getDeleteUser,
     changePassword,
 }
+
+// const getDeleteUser = async (req, res) => {
+//     let { oId, status } = req.body
+//     if (!oId || !status) {
+//         return res.json({ message: 'All filled must be required' })
+//     } else {
+//         let currentUser = userModel.findByIdAndUpdate(oId, {
+//             status: status,
+//             updatedAt: Date.now(),
+//         })
+//         currentUser.exec((err, result) => {
+//             if (err) console.log(err)
+//             return res.json({ success: 'User updated successfully' })
+//         })
+//     }
+// }
+
+// const postAddUser = async (req, res) => {
+//     let { allProduct, user, amount, transactionId, address, phone } = req.body
+//     if (
+// !allProduct ||
+// !user ||
+// !amount ||
+// !transactionId ||
+// !address ||
+// !phone
+//     ) {
+//         return res.json({ message: 'All filled must be required' })
+//     } else {
+//         try {
+//             let newUser = new userModel({
+//                 allProduct,
+//                 user,
+//                 amount,
+//                 transactionId,
+//                 address,
+//                 phone,
+//             })
+//             let save = await newUser.save()
+//             if (save) {
+//                 return res.json({ success: 'User created successfully' })
+//             }
+//         } catch (err) {
+//             return res.json({ error: error })
+//         }
+//     }
+// }
+
+// const getAllUser = async (req, res) => {
+//     try {
+//         let Users = await userModel
+//             .find({})
+//             .populate('allProduct.id', 'pName pImages pPrice')
+//             .populate('user', 'name email')
+//             .sort({ _id: -1 })
+//         if (Users) {
+//             return res.json({ Users })
+//         }
+//     } catch (err) {
+//         console.log(err)
+//     }
+// }s
