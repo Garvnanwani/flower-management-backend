@@ -74,11 +74,11 @@ const postCreateOrder = async (req, res) => {
 }
 
 const postUpdateOrder = async (req, res) => {
-    let { oId, status } = req.body
-    if (!oId || !status) {
+    let { order_id, status } = req.body
+    if (!order_id || !status) {
         return res.json({ message: 'All fields must be required' })
     } else {
-        let currentOrder = orderModel.findByIdAndUpdate(oId, {
+        let currentOrder = orderModel.findByIdAndUpdate(order_id, {
             status: status,
             updatedAt: Date.now(),
         })
@@ -90,15 +90,27 @@ const postUpdateOrder = async (req, res) => {
 }
 
 const postDeleteOrder = async (req, res) => {
-    let { oId } = req.body
-    if (!oId) {
+    let { order_id } = req.body
+    if (!order_id) {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            let deleteOrder = await orderModel.findByIdAndDelete(oId)
-            if (deleteOrder) {
-                return res.json({ success: 'Order deleted successfully' })
-            }
+            const db = await connect()
+
+            const _ = await db.query(
+                `
+                DELETE FROM orders WHERE order_id = ?
+            `,
+                [order_id]
+            )
+
+            const _ = await db.query(
+                `
+                DELETE FROM order_details WHERE order_id = ?
+            `,
+                [order_id]
+            )
+            return res.json({ success: 'Order deleted successfully' })
         } catch (error) {
             console.log(error)
         }
