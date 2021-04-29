@@ -215,7 +215,9 @@ const getSingleProduct = async (req, res) => {
 
             const [result, _] = await db.query(
                 `
-                SELECT pcategory, pname FROM products WHERE productid = ?
+                SELECT products.pcategory, categories.name FROM categories
+                INNER JOIN products ON categories.name = products.pcategory;
+                WHERE products.productid < ?
             `,
                 [productid]
             )
@@ -225,7 +227,7 @@ const getSingleProduct = async (req, res) => {
             //     .populate('pCategory', 'cName')
             //     .populate('pRatingsReviews.user', 'name email userImage')
 
-            return res.json({ Product: singleProduct })
+            return res.json({ Product: result[0] })
         } catch (err) {
             console.log(err)
         }
@@ -238,8 +240,6 @@ const getProductByCategory = async (req, res) => {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            //also return category name
-
             const db = await connect()
 
             const [result, _] = await db.query(
@@ -264,7 +264,6 @@ const getProductByPrice = async (req, res) => {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            //also return category name
             const db = await connect()
 
             const [result, _] = await db.query(
