@@ -2,14 +2,16 @@ const connect = require('../config/db')
 
 const getAllOrders = async (req, res) => {
     try {
-        let Orders = await orderModel
-            .find({})
-            .populate('allProduct.id', 'pName pImages pPrice')
-            .populate('user', 'name email')
-            .sort({ _id: -1 })
-        if (Orders) {
-            return res.json({ Orders })
-        }
+        const db = await connect()
+
+        const [result, _] = await db.query(`
+            SELECT orders.order_id, users.name, users.email, order_details.product_name ,order_details.product_price
+            FROM ((orders
+            INNER JOIN users ON orders.user_id = users.userid)
+            INNER JOIN order_details ON orders.order_id = order_details.order_id);
+        `)
+
+        return res.json({ Orders: result })
     } catch (err) {
         console.log(err)
     }
