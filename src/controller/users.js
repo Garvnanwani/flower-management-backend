@@ -98,12 +98,12 @@ const changePassword = async (req, res) => {
 }
 
 module.exports = {
-    // getAllUser,
     getSingleUser,
-    // postAddUser,
     postEditUser,
-    // getDeleteUser,
     changePassword,
+    // getAllUser,
+    // postAddUser,
+    // getDeleteUser,
 }
 
 // const getDeleteUser = async (req, res) => {
