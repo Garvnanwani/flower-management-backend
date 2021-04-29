@@ -2,20 +2,22 @@ const bcrypt = require('bcryptjs')
 const connect = require('../config/db')
 
 const getSingleUser = async (req, res) => {
-    let { uId } = req.body
-    if (!uId) {
+    let { id } = req.body
+
+    if (!id) {
         return res.json({ error: 'All filled must be required' })
-    } else {
-        try {
-            let User = await userModel
-                .findById(uId)
-                .select('name email phoneNumber userImage updatedAt createdAt')
-            if (User) {
-                return res.json({ User })
-            }
-        } catch (err) {
-            console.log(err)
-        }
+    }
+    try {
+        const db = await connect()
+
+        const [result, _] = await db.query(
+            `SELECT * FROM users WHERE userid=?`,
+            [id]
+        )
+
+        return res.json({ User: result })
+    } catch (err) {
+        console.log(err)
     }
 }
 

@@ -7,6 +7,8 @@ const { validateEmail, toTitleCase } = require('../config/function')
 const isAdmin = async (req, res) => {
     let { loggedInUserId } = req.body
     try {
+        const db = await connect()
+
         const [result, _] = await db.query(
             `
             SELECT userRole FROM users WHERE userid = ?
@@ -29,7 +31,7 @@ const allUser = async (req, res) => {
             SELECT * FROM users
         `)
 
-        res.json({ users: result })
+        res.json({ users: result[0] })
     } catch {
         res.status(404)
         console.log(err)
