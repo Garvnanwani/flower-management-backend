@@ -49,6 +49,7 @@ CREATE TABLE order_details (
   order_id INT NOT NULL,
   product_id VARCHAR(10) NOT NULL,
   product_name VARCHAR(100) NOT NULL,
+  product_cost INT,
   quantity INT NOT NULL,
   unit_cost INT NOT NULL,
   payment_mode VARCHAR(50) NOT NULL,
@@ -93,8 +94,8 @@ CREATE TABLE has_production_cart(
   KEY idx_has_production_cart_id (cart_id)
 );
 -- Populate category table
-INSERT INTO 
-    categories(category_id, name, description, category_image)
+INSERT INTO
+  categories(category_id, name, description, category_image)
 VALUES
   (
     "CB",
