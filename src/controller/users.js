@@ -22,8 +22,8 @@ const getSingleUser = async (req, res) => {
 }
 
 const postEditUser = async (req, res) => {
-    let { user_id, name } = req.body
-    if (!user_id || !name) {
+    let { user_id, name, phone_number } = req.body
+    if (!user_id || !name || !phone_number) {
         return res.json({ message: 'All fields must be required' })
     } else {
         try {
@@ -33,11 +33,12 @@ const postEditUser = async (req, res) => {
                 `
                 UPDATE users
                 SET
-                    name = ?
+                    name = ?,
+                    phone_number = ?
                 WHERE
                     user_id = ?
             `,
-                [name, user_id]
+                [name, phone_number, user_id]
             )
 
             return res.json({ success: 'User updated successfully' })
