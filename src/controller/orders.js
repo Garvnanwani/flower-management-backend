@@ -43,15 +43,8 @@ const getOrderByUser = async (req, res) => {
 }
 
 const postCreateOrder = async (req, res) => {
-    let { allProduct, user, amount, transactionId, address, phone } = req.body
-    if (
-        !allProduct ||
-        !user ||
-        !amount
-        // !transactionId ||
-        // !address ||
-        // !phone
-    ) {
+    let { allProduct, user, amount, address, phone_number } = req.body
+    if (!allProduct || !user || !amount || !address || !phone_number) {
         return res.json({ message: 'All fields must be required' })
     } else {
         try {
@@ -59,9 +52,9 @@ const postCreateOrder = async (req, res) => {
 
             const result1 = db.query(
                 `
-                INSERT INTO orders (user_id, total_amount) VALUES (?, ?)
+                INSERT INTO orders (user_id, total_amount, address, phone_number) VALUES (?, ?)
             `,
-                [user, amount]
+                [user, amount, address, phone_number]
             )
 
             let values = []

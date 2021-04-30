@@ -11,7 +11,7 @@ const isAdmin = async (req, res) => {
 
         const [result, _] = await db.query(
             `
-            SELECT userRole FROM users WHERE user_id = ?
+            SELECT user_role FROM users WHERE user_id = ?
         `,
             [loggedInUserId]
         )

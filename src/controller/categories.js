@@ -17,11 +17,11 @@ const getAllCategory = async (req, res) => {
 }
 
 const postAddCategory = async (req, res) => {
-    let { name, description } = req.body
+    let { cName, cDescription, cStatus } = req.body
     let category_image = req.file.filename
     // const filePath = `./public/uploads/categories/${category_image}`
 
-    if (!name || !description || !category_image) {
+    if (!cName || !cDescription || !cStatus) {
         fs.unlink(filePath, (err) => {
             if (err) {
                 console.log(err)
@@ -29,15 +29,15 @@ const postAddCategory = async (req, res) => {
             return res.json({ error: 'All fields must be required' })
         })
     } else {
-        name = toTitleCase(name)
+        cName = toTitleCase(cName)
         try {
             const db = await connect()
 
             const [result, _] = await db.query(
                 `
-                SELECT * FROM categories WHERE name=?
+                SELECT * FROM categories WHERE cName=?
             `,
-                [name]
+                [cName]
             )
             if (result.length > 0) {
                 fs.unlink(filePath, (err) => {
@@ -49,9 +49,9 @@ const postAddCategory = async (req, res) => {
             } else {
                 const [result, _] = await db.query(
                     `
-                INSERT INTO categories (name, description) VALUES (?, ?)
+                INSERT INTO categories (cName, cDescription,cStatus) VALUES (?, ?)
                 `,
-                    [name, description]
+                    [cName, cDescription, cStatus]
                 )
 
                 return res.json({
@@ -65,8 +65,8 @@ const postAddCategory = async (req, res) => {
 }
 
 const postEditCategory = async (req, res) => {
-    let { category_id, description } = req.body
-    if (!category_id || !description) {
+    let { category_id, cDescription } = req.body
+    if (!category_id || !cDescription) {
         return res.json({ error: 'All fields must be required' })
     }
     try {
@@ -76,11 +76,11 @@ const postEditCategory = async (req, res) => {
             `
         UPDATE categories
         SET
-            description = ?
+            cDescription = ?
         WHERE
             category_id = ?
         `,
-            [description, category_id]
+            [cDescription, category_id]
         )
         return res.json({ success: 'Category edit successfully' })
     } catch (err) {
