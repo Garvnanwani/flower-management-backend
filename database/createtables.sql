@@ -59,4 +59,8 @@ CREATE TABLE reviews(
   rating FLOAT(8, 2)
 );
 -- DELETE ALL TABLES
-DROP TABLE users DROP TABLE products DROP TABLE categories DROP TABLE orders DROP TABLE order_details
+DROP TABLE users;
+DROP TABLE products;
+DROP TABLE categories;
+DROP TABLE orders;
+DROP TABLE order_details;
