@@ -64,3 +64,4 @@ DROP TABLE products;
 DROP TABLE categories;
 DROP TABLE orders;
 DROP TABLE order_details;
+DROP TABLE reviews;
