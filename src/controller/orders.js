@@ -7,7 +7,7 @@ const getAllOrders = async (req, res) => {
         const [result, _] = await db.query(`
             SELECT orders.order_id, users.name, users.email, order_details.product_name ,order_details.product_price
             FROM ((orders
-            INNER JOIN users ON orders.user_id = users.userid)
+            INNER JOIN users ON orders.user_id = users.user_id)
             INNER JOIN order_details ON orders.order_id = order_details.order_id)
         `)
 
@@ -18,8 +18,8 @@ const getAllOrders = async (req, res) => {
 }
 
 const getOrderByUser = async (req, res) => {
-    let { userid } = req.body
-    if (!userid) {
+    let { user_id } = req.body
+    if (!user_id) {
         return res.json({ message: 'All fields must be required' })
     } else {
         try {
@@ -29,11 +29,11 @@ const getOrderByUser = async (req, res) => {
                 `
             SELECT orders.order_id, users.name, users.email, order_details.product_name ,order_details.product_price
             FROM ((orders
-            INNER JOIN users ON orders.user_id = users.userid)
+            INNER JOIN users ON orders.user_id = users.user_id)
             INNER JOIN order_details ON orders.order_id = order_details.order_id)
-            WHERE users.userid = ?
+            WHERE users.user_id = ?
         `,
-                [userid]
+                [user_id]
             )
             return res.json({ Order: result })
         } catch (err) {

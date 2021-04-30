@@ -2,18 +2,18 @@ const bcrypt = require('bcryptjs')
 const connect = require('../config/db')
 
 const getSingleUser = async (req, res) => {
-    let { userid } = req.body
+    let { user_id } = req.body
 
-    if (!userid) {
+    if (!user_id) {
         return res.json({ error: 'All fields must be required' })
     }
     try {
         const db = await connect()
 
-        const [result, _] = await db.query(
-            `SELECT * FROM users WHERE userid=?`,
-            [userid]
-        )
+        const [
+            result,
+            _,
+        ] = await db.query(`SELECT * FROM users WHERE user_id=?`, [user_id])
 
         return res.json({ User: result })
     } catch (err) {
@@ -22,8 +22,8 @@ const getSingleUser = async (req, res) => {
 }
 
 const postEditUser = async (req, res) => {
-    let { userid, name } = req.body
-    if (!userid || !name) {
+    let { user_id, name } = req.body
+    if (!user_id || !name) {
         return res.json({ message: 'All fields must be required' })
     } else {
         try {
@@ -35,9 +35,9 @@ const postEditUser = async (req, res) => {
                 SET
                     name = ?
                 WHERE
-                    userid = ?
+                    user_id = ?
             `,
-                [name, userId]
+                [name, user_id]
             )
 
             return res.json({ success: 'User updated successfully' })
@@ -48,8 +48,8 @@ const postEditUser = async (req, res) => {
 }
 
 const changePassword = async (req, res) => {
-    let { userid, oldPassword, newPassword } = req.body
-    if (!userid || !oldPassword || !newPassword) {
+    let { user_id, oldPassword, newPassword } = req.body
+    if (!user_id || !oldPassword || !newPassword) {
         return res.json({ message: 'All fields must be required' })
     } else {
         try {
@@ -58,7 +58,7 @@ const changePassword = async (req, res) => {
             const [
                 result,
                 _,
-            ] = await db.query(`SELECT * FROM users WHERE userid=?`, [userid])
+            ] = await db.query(`SELECT * FROM users WHERE user_id=?`, [user_id])
 
             if (result.length < 1) {
                 return res.json({
@@ -67,7 +67,7 @@ const changePassword = async (req, res) => {
             } else {
                 const oldPassCheck = await bcrypt.compare(
                     oldPassword,
-                    data.password
+                    result[0].password
                 )
                 if (oldPassCheck) {
                     newPassword = bcrypt.hashSync(newPassword, 10)
@@ -78,9 +78,9 @@ const changePassword = async (req, res) => {
                         SET
                             password = ?
                         WHERE
-                            userid = ?
+                            user_id = ?
                     `,
-                        [newPassword, userId]
+                        [newPassword, user_id]
                     )
                     return res.json({
                         success: 'Password updated successfully',

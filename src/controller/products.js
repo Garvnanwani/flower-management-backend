@@ -43,32 +43,31 @@ const getAllProduct = async (req, res) => {
 
 const postAddProduct = async (req, res) => {
     let {
-        pname,
-        pdescription,
-        pprice,
-        psold,
-        pquantity,
-        pcategory,
-        prating,
+        pName,
+        pDescription,
+        pPrice,
+        pQuantity,
+        pCategory,
+        pStatus,
     } = req.body
 
     let images = req.files
     // Validation
     if (
-        !pname ||
-        !pdescription ||
-        !pprice ||
-        !psold ||
-        !pquantity ||
-        !pcategory ||
-        !prating
+        !pName ||
+        !pDescription ||
+        !pPrice ||
+        !pQuantity ||
+        !pCategory ||
+        !pRating ||
+        !pStatus
     ) {
-        deleteImages(images, 'file')
+        // deleteImages(images, 'file')
         return res.json({ error: 'All fields must be required' })
     }
     // Validate Name and description
-    else if (pname.length > 255 || pdescription.length > 3000) {
-        deleteImages(images, 'file')
+    else if (pName.length > 255 || pDescription.length > 3000) {
+        // deleteImages(images, 'file')
         return res.json({
             error: 'Name 255 & Description must not be 3000 charecter long',
         })
@@ -89,24 +88,24 @@ const postAddProduct = async (req, res) => {
             const [result, _] = await db.query(
                 `
                 INSERT INTO products (
-                    pname,
-                    pdescription,
-                    pprice,
-                    psold,
-                    pquantity,
-                    pcategory,
-                    prating,
+                     pName,
+                    pDescription,
+                    pPrice,
+                    pQuantity,
+                    pCategory,
+                    pRating,
+                    pStatus
                 ) VALUES (
                     ?, ?, ?, ?, ?, ?, ?
                 )`,
                 [
-                    pname,
-                    pdescription,
-                    pprice,
-                    psold,
-                    pquantity,
-                    pcategory,
-                    prating,
+                    pName,
+                    pDescription,
+                    pPrice,
+                    pQuantity,
+                    pCategory,
+                    pRating,
+                    pStatus,
                 ]
             )
             return res.json({ success: 'Product created successfully' })
@@ -118,29 +117,32 @@ const postAddProduct = async (req, res) => {
 
 const postEditProduct = async (req, res) => {
     let {
-        productid,
-        pname,
-        pdescription,
-        pprice,
-        pquantity,
-        pcategory,
-        pimages,
+        product_id,
+        pName,
+        pDescription,
+        pPrice,
+        pQuantity,
+        pCategory,
+        pRating,
+        pStatus,
     } = req.body
     let editImages = req.files
 
     // Validate other fileds
     if (
-        !productid ||
-        !pname ||
-        !pdescription ||
-        !pprice ||
-        !pquantity ||
-        !pcategory
+        !product_id ||
+        !pName ||
+        !pDescription ||
+        !pPrice ||
+        !pQuantity ||
+        !pCategory ||
+        !pRating ||
+        !pStatus
     ) {
         return res.json({ error: 'All fields must be required' })
     }
     // Validate Name and description
-    else if (pname.length > 255 || pdescription.length > 3000) {
+    else if (pName.length > 255 || pDescription.length > 3000) {
         return res.json({
             error: 'Name 255 & Description must not be 3000 charecter long',
         })
@@ -165,22 +167,24 @@ const postEditProduct = async (req, res) => {
         const [result, _] = await db.query(
             `
             UPDATE products
-            SET productid : ?
-                pname : ?
-                pdescription : ?
-                pprice : ?
-                pquantity : ?
-                pcategory : ?
-                pimages : ?
+            SET pName : ?
+                pDescription : ?
+                pPrice : ?
+                pQuantity : ?
+                pCategory : ?
+                pRating: ?
+                pStatus: ?
+            WHERE product_id = ?
             `,
             [
-                productid,
-                pname,
-                pdescription,
-                pprice,
-                pquantity,
-                pcategory,
-                pimages,
+                pName,
+                pDescription,
+                pPrice,
+                pQuantity,
+                pCategory,
+                pRating,
+                pStatus,
+                product_id,
             ]
         )
 
@@ -191,8 +195,8 @@ const postEditProduct = async (req, res) => {
 }
 
 const getDeleteProduct = async (req, res) => {
-    let { productid } = req.body
-    if (!productid) {
+    let { product_id } = req.body
+    if (!product_id) {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
@@ -200,9 +204,9 @@ const getDeleteProduct = async (req, res) => {
 
             const [result, _] = await db.query(
                 `
-                DELETE FROM products WHERE productid = ?
+                DELETE FROM products WHERE product_id = ?
             `,
-                [productid]
+                [product_id]
             )
 
             return res.json({ success: 'Product deleted successfully' })
@@ -218,8 +222,8 @@ const getDeleteProduct = async (req, res) => {
 }
 
 const getSingleProduct = async (req, res) => {
-    let { productid } = req.body
-    if (!productid) {
+    let { product_id } = req.body
+    if (!product_id) {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
@@ -227,16 +231,16 @@ const getSingleProduct = async (req, res) => {
 
             const [result, _] = await db.query(
                 `
-                SELECT products.pcategory, categories.name FROM categories
-                INNER JOIN products ON categories.name = products.pcategory;
-                WHERE products.productid < ?
+                SELECT products.pCategory, categories.cName FROM categories
+                INNER JOIN products ON categories.cName = products.pCategory;
+                WHERE products.product_id = ?
             `,
-                [productid]
+                [product_id]
             )
 
             // let singleProduct = await productModel
-            //     .findById(productid)
-            //     .populate('pcategory', 'cName')
+            //     .findById(product_id)
+            //     .populate('pCategory', 'cName')
             //     .populate('pRatingsReviews.user', 'name email userImage')
 
             return res.json({ Product: result[0] })
@@ -258,8 +262,8 @@ const getProductByCategory = async (req, res) => {
 
             const [result, _] = await db.query(
                 `
-                SELECT products.pcategory, categories.name FROM categories
-                INNER JOIN products ON categories.name = products.pcategory;
+                SELECT products.pCategory, categories.cName FROM categories
+                INNER JOIN products ON categories.nCame = products.pCategory;
                 WHERE categories.category_id = ?
             `,
                 [category_id]
@@ -284,9 +288,9 @@ const getProductByPrice = async (req, res) => {
 
             const [result, _] = await db.query(
                 `
-                SELECT products.pcategory, categories.name FROM categories
-                INNER JOIN products ON categories.name = products.pcategory;
-                WHERE products.pprice < ?
+                SELECT products.pCategory, categories.cName FROM categories
+                INNER JOIN products ON categories.cName = products.pCategory;
+                WHERE products.pPrice < ?
             `,
                 [price]
             )
@@ -310,7 +314,7 @@ const getWishProduct = async (req, res) => {
 
             const [result, _] = await db.query(
                 `
-                SELECT * FROM products WHERE productid IN ?
+                SELECT * FROM products WHERE product_id IN ?
             `,
                 [productArray]
             )
@@ -334,7 +338,7 @@ const getCartProduct = async (req, res) => {
 
             const [result, _] = await db.query(
                 `
-                SELECT * FROM products WHERE productid IN ?
+                SELECT * FROM products WHERE product_id IN ?
             `,
                 [productArray]
             )
@@ -348,8 +352,8 @@ const getCartProduct = async (req, res) => {
 }
 
 const postAddReview = async (req, res) => {
-    let { productid, userid, rating, review } = req.body
-    if (!productid || !rating || !review || !userid) {
+    let { product_id, user_id, rating, review } = req.body
+    if (!product_id || !rating || !review || !user_id) {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
@@ -357,9 +361,9 @@ const postAddReview = async (req, res) => {
 
             const [result, _] = await db.query(
                 `
-                INSERT INTO reviews (productid, userid, rating, review) VALUES (?,?,?,?)
+                INSERT INTO reviews (product_id, user_id, rating, review) VALUES (?,?,?,?)
             `,
-                [productid, userid, rating, review]
+                [product_id, user_id, rating, review]
             )
         } catch (err) {
             console.log(err)
@@ -369,7 +373,7 @@ const postAddReview = async (req, res) => {
 }
 
 const deleteReview = async (req, res) => {
-    let { review_id, productid } = req.body
+    let { review_id, product_id } = req.body
     if (!review_id) {
         return res.json({ message: 'All fields must be required' })
     } else {

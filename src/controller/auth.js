@@ -11,7 +11,7 @@ const isAdmin = async (req, res) => {
 
         const [result, _] = await db.query(
             `
-            SELECT userRole FROM users WHERE userid = ?
+            SELECT userRole FROM users WHERE user_id = ?
         `,
             [loggedInUserId]
         )
@@ -128,7 +128,7 @@ const postSignin = async (req, res) => {
             const login = await bcrypt.compare(password, user.password)
             if (login) {
                 const token = jwt.sign(
-                    { userid: user.userid, role: user.userRole },
+                    { user_id: user.user_id, role: user.userRole },
                     JWT_SECRET
                 )
                 const encode = jwt.verify(token, JWT_SECRET)
