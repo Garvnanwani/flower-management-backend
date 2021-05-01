@@ -35,7 +35,7 @@ const getAllProduct = async (req, res) => {
         `)
 
         res.json({ Products: result })
-    } catch {
+    } catch (err) {
         res.status(404)
         console.log(err)
     }
