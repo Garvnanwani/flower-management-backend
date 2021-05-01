@@ -109,12 +109,34 @@ const postSignin = async (req, res) => {
             _,
         ] = await db.query(`SELECT * FROM users where email = ?`, [email])
 
-        console.log(result)
-
         if (result.length == 0) {
-            return res.json({
-                error: 'Invalid email or password',
-            })
+            const [
+                result,
+                _,
+            ] = await db.query(`SELECT * FROM users where name = ?`, [email])
+
+            if (result.length == 0) {
+                return res.json({
+                    error: 'Invalid email or password',
+                })
+            }
+            const user = result[0]
+            const login = await bcrypt.compare(password, user.password)
+            if (login) {
+                const token = jwt.sign(
+                    { user_id: user.user_id, role: user.userRole },
+                    JWT_SECRET
+                )
+                const encode = jwt.verify(token, JWT_SECRET)
+                return res.json({
+                    token: token,
+                    user: encode,
+                })
+            } else {
+                return res.json({
+                    error: 'Invalid credentials',
+                })
+            }
         } else {
             const user = result[0]
             const login = await bcrypt.compare(password, user.password)
@@ -130,7 +152,7 @@ const postSignin = async (req, res) => {
                 })
             } else {
                 return res.json({
-                    error: 'Invalid email or password',
+                    error: 'Invalid credentials',
                 })
             }
         }
