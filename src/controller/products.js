@@ -298,7 +298,7 @@ const getWishProduct = async (req, res) => {
         try {
             const [result, _] = await db.query(
                 `
-                SELECT * FROM products WHERE product_id IN ?
+                SELECT * FROM products WHERE product_id IN (?)
             `,
                 [productArray]
             )
@@ -314,13 +314,13 @@ const getWishProduct = async (req, res) => {
 
 const getCartProduct = async (req, res) => {
     let { productArray } = req.body
-    if (productArray.length === 0) {
+    if (productArray && productArray.length === 0) {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
             const [result, _] = await db.query(
                 `
-                SELECT * FROM products WHERE product_id IN ?
+                SELECT * FROM products WHERE product_id IN (?)
             `,
                 [productArray]
             )
