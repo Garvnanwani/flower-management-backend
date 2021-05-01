@@ -222,9 +222,8 @@ const getSingleProduct = async (req, res) => {
             const [result, _] = await db.query(
                 `
                 SELECT products.pCategory, categories.cName FROM categories
-                INNER JOIN products ON categories.cName = products.pCategory;
-                WHERE products.product_id = ?
-            `,
+                INNER JOIN products ON categories.cName = products.pCategory
+                WHERE products.product_id = ?`,
                 [product_id]
             )
 
@@ -251,7 +250,7 @@ const getProductByCategory = async (req, res) => {
             const [result, _] = await db.query(
                 `
                 SELECT products.pCategory, categories.cName FROM categories
-                INNER JOIN products ON categories.nCame = products.pCategory;
+                INNER JOIN products ON categories.nCame = products.pCategory
                 WHERE categories.category_id = ?
             `,
                 [category_id]
@@ -275,7 +274,7 @@ const getProductByPrice = async (req, res) => {
             const [result, _] = await db.query(
                 `
                 SELECT products.pCategory, categories.cName FROM categories
-                INNER JOIN products ON categories.cName = products.pCategory;
+                INNER JOIN products ON categories.cName = products.pCategory
                 WHERE products.pPrice < ?
             `,
                 [price]
