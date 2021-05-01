@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs')
-const connect = require('../config/db')
+const db = require('../config/db')
 
 const getSingleUser = async (req, res) => {
     let { user_id } = req.body
@@ -8,8 +8,6 @@ const getSingleUser = async (req, res) => {
         return res.json({ error: 'All fields must be required' })
     }
     try {
-        const db = await connect()
-
         const [
             result,
             _,
@@ -27,8 +25,6 @@ const postEditUser = async (req, res) => {
         return res.json({ message: 'All fields must be required' })
     } else {
         try {
-            const db = await connect()
-
             const [result, _] = await db.query(
                 `
                 UPDATE users
@@ -54,8 +50,6 @@ const changePassword = async (req, res) => {
         return res.json({ message: 'All fields must be required' })
     } else {
         try {
-            const db = await connect()
-
             const [
                 result,
                 _,

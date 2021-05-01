@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const connect = require('../config/db')
+const db = require('../config/db')
 
 // Delete Image from uploads -> products folder
 const deleteImages = (images, mode) => {
@@ -28,8 +28,6 @@ const deleteImages = (images, mode) => {
 
 const getAllProduct = async (req, res) => {
     try {
-        const db = await connect()
-
         const [result, _] = await db.query(`
             SELECT * FROM products
         `)
@@ -79,8 +77,6 @@ const postAddProduct = async (req, res) => {
     // }
     else {
         try {
-            const db = await connect()
-
             let allImages = []
             for (const img of images) {
                 allImages.push(img.filename)
@@ -162,8 +158,6 @@ const postEditProduct = async (req, res) => {
         //     deleteImages(pimages.split(','), 'string')
     }
     try {
-        const db = await connect()
-
         const [result, _] = await db.query(
             `
             UPDATE products
@@ -200,8 +194,6 @@ const getDeleteProduct = async (req, res) => {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            const db = await connect()
-
             const [result, _] = await db.query(
                 `
                 DELETE FROM products WHERE product_id = ?
@@ -227,8 +219,6 @@ const getSingleProduct = async (req, res) => {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            const db = await connect()
-
             const [result, _] = await db.query(
                 `
                 SELECT products.pCategory, categories.cName FROM categories
@@ -258,8 +248,6 @@ const getProductByCategory = async (req, res) => {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            const db = await connect()
-
             const [result, _] = await db.query(
                 `
                 SELECT products.pCategory, categories.cName FROM categories
@@ -284,8 +272,6 @@ const getProductByPrice = async (req, res) => {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            const db = await connect()
-
             const [result, _] = await db.query(
                 `
                 SELECT products.pCategory, categories.cName FROM categories
@@ -306,12 +292,10 @@ const getProductByPrice = async (req, res) => {
 
 const getWishProduct = async (req, res) => {
     let { productArray } = req.body
-    if (productArray.length === 0) {
+    if (productArray && productArray.length === 0) {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            const db = await connect()
-
             const [result, _] = await db.query(
                 `
                 SELECT * FROM products WHERE product_id IN ?
@@ -334,8 +318,6 @@ const getCartProduct = async (req, res) => {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            const db = await connect()
-
             const [result, _] = await db.query(
                 `
                 SELECT * FROM products WHERE product_id IN ?
@@ -357,8 +339,6 @@ const postAddReview = async (req, res) => {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            const db = await connect()
-
             const [result, _] = await db.query(
                 `
                 INSERT INTO reviews (product_id, user_id, rating, review) VALUES (?,?,?,?)
@@ -378,8 +358,6 @@ const deleteReview = async (req, res) => {
         return res.json({ message: 'All fields must be required' })
     } else {
         try {
-            const db = await connect()
-
             const [result, _] = await db.query(
                 `
                 DELETE FROM reviews WHERE review_id = ?

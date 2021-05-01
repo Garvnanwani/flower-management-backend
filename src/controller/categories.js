@@ -1,11 +1,9 @@
-const connect = require('../config/db')
+const db = require('../config/db')
 const { toTitleCase } = require('../config/function')
 const fs = require('fs')
 
 const getAllCategory = async (req, res) => {
     try {
-        const db = await connect()
-
         const [result, _] = await db.query(`
             SELECT * FROM categories
         `)
@@ -31,8 +29,6 @@ const postAddCategory = async (req, res) => {
     } else {
         cName = toTitleCase(cName)
         try {
-            const db = await connect()
-
             const [result, _] = await db.query(
                 `
                 SELECT * FROM categories WHERE cName=?
@@ -70,8 +66,6 @@ const postEditCategory = async (req, res) => {
         return res.json({ error: 'All fields must be required' })
     }
     try {
-        const db = await connect()
-
         const [result, _] = await db.query(
             `
         UPDATE categories
@@ -94,8 +88,6 @@ const getDeleteCategory = async (req, res) => {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            const db = await connect()
-
             // let deletedCategoryFile = await categoryModel.findById(category_id)
             // const filePath = `./public/uploads/categories/${deletedCategoryFile.image}`
 

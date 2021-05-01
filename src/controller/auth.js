@@ -1,4 +1,4 @@
-const connect = require('../config/db')
+const db = require('../config/db')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { JWT_SECRET } = require('../config/keys')
@@ -7,8 +7,6 @@ const { validateEmail, toTitleCase } = require('../config/function')
 const isAdmin = async (req, res) => {
     let { loggedInUserId } = req.body
     try {
-        const db = await connect()
-
         const [result, _] = await db.query(
             `
             SELECT user_role FROM users WHERE user_id = ?
@@ -25,8 +23,6 @@ const isAdmin = async (req, res) => {
 
 const allUser = async (req, res) => {
     try {
-        const db = await connect()
-
         const [result, _] = await db.query(`
             SELECT * FROM users
         `)
@@ -41,8 +37,6 @@ const allUser = async (req, res) => {
 /* User Registration/Signup controller  */
 const postSignup = async (req, res) => {
     try {
-        const db = await connect()
-
         let { name, email, password } = req.body
 
         if (!name || !email || !password) {
@@ -110,8 +104,6 @@ const postSignin = async (req, res) => {
         })
     }
     try {
-        const db = await connect()
-
         const [
             result,
             _,

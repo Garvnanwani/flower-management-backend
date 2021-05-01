@@ -1,9 +1,7 @@
-const connect = require('../config/db')
+const db = require('../config/db')
 
 const getAllOrders = async (req, res) => {
     try {
-        const db = await connect()
-
         const [result, _] = await db.query(`
             SELECT orders.order_id, users.name, users.email, order_details.product_name ,order_details.product_price
             FROM ((orders
@@ -23,8 +21,6 @@ const getOrderByUser = async (req, res) => {
         return res.json({ message: 'All fields must be required' })
     } else {
         try {
-            const db = await connect()
-
             const [result, _] = await db.query(
                 `
             SELECT orders.order_id, users.name, users.email, order_details.product_name ,order_details.product_price
@@ -48,8 +44,6 @@ const postCreateOrder = async (req, res) => {
         return res.json({ message: 'All fields must be required' })
     } else {
         try {
-            const db = await connect()
-
             const result1 = db.query(
                 `
                 INSERT INTO orders (user_id, total_amount, address, phone_number) VALUES (?, ?)
@@ -107,8 +101,6 @@ const postDeleteOrder = async (req, res) => {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            const db = await connect()
-
             const result1 = await db.query(
                 `
                 DELETE FROM orders WHERE order_id = ?
