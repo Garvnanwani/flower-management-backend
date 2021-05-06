@@ -221,7 +221,7 @@ const getSingleProduct = async (req, res) => {
         try {
             const [result, _] = await db.query(
                 `
-                SELECT products.pCategory, categories.cName FROM categories
+                SELECT * FROM categories
                 INNER JOIN products ON categories.cName = products.pCategory
                 WHERE products.product_id = ?`,
                 [product_id]
