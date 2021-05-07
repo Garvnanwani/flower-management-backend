@@ -3,7 +3,7 @@ const db = require('../config/db')
 const getAllOrders = async (req, res) => {
     try {
         const [result, _] = await db.query(`
-            SELECT orders.order_id, users.name, users.email, order_details.product_name ,order_details.product_price
+            SELECT orders.order_id, users.name, users.email, order_details.product_name ,order_details.product_cost
             FROM ((orders
             INNER JOIN users ON orders.user_id = users.user_id)
             INNER JOIN order_details ON orders.order_id = order_details.order_id)
