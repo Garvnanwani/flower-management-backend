@@ -1,2 +1,1 @@
- ikchi bhi
-
+console.log(something)
