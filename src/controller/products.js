@@ -49,7 +49,8 @@ const postAddProduct = async (req, res) => {
         pStatus,
     } = req.body
 
-    let images = req.files
+    let image = req.files[0]
+
     // Validation
     if (
         !pName ||
@@ -57,7 +58,6 @@ const postAddProduct = async (req, res) => {
         !pPrice ||
         !pQuantity ||
         !pCategory ||
-        !pRating ||
         !pStatus
     ) {
         // deleteImages(images, 'file')
@@ -67,7 +67,7 @@ const postAddProduct = async (req, res) => {
     else if (pName.length > 255 || pDescription.length > 3000) {
         // deleteImages(images, 'file')
         return res.json({
-            error: 'Name 255 & Description must not be 3000 charecter long',
+            error: 'Name 255 & Description must not be 3000 character long',
         })
     }
     // Validate Images
@@ -77,20 +77,17 @@ const postAddProduct = async (req, res) => {
     // }
     else {
         try {
-            let allImages = []
-            for (const img of images) {
-                allImages.push(img.filename)
-            }
+            pImage = image.filename
             const [result, _] = await db.query(
                 `
                 INSERT INTO products (
-                     pName,
+                    pName,
                     pDescription,
                     pPrice,
                     pQuantity,
                     pCategory,
-                    pRating,
-                    pStatus
+                    pStatus,
+                    pImage
                 ) VALUES (
                     ?, ?, ?, ?, ?, ?, ?
                 )`,
@@ -100,8 +97,8 @@ const postAddProduct = async (req, res) => {
                     pPrice,
                     pQuantity,
                     pCategory,
-                    pRating,
                     pStatus,
+                    pImage,
                 ]
             )
             return res.json({ success: 'Product created successfully' })
@@ -119,7 +116,6 @@ const postEditProduct = async (req, res) => {
         pPrice,
         pQuantity,
         pCategory,
-        pRating,
         pStatus,
     } = req.body
     let editImages = req.files
@@ -132,7 +128,6 @@ const postEditProduct = async (req, res) => {
         !pPrice ||
         !pQuantity ||
         !pCategory ||
-        !pRating ||
         !pStatus
     ) {
         return res.json({ error: 'All fields must be required' })
@@ -166,7 +161,6 @@ const postEditProduct = async (req, res) => {
                 pPrice : ?
                 pQuantity : ?
                 pCategory : ?
-                pRating: ?
                 pStatus: ?
             WHERE product_id = ?
             `,
@@ -176,7 +170,6 @@ const postEditProduct = async (req, res) => {
                 pPrice,
                 pQuantity,
                 pCategory,
-                pRating,
                 pStatus,
                 product_id,
             ]
@@ -200,13 +193,12 @@ const getDeleteProduct = async (req, res) => {
             `,
                 [product_id]
             )
+            if (result.length > 0) {
+                // Delete Image from uploads -> products folder
+                deleteImages(deleteProductObj.pimages, 'string')
+            }
 
             return res.json({ success: 'Product deleted successfully' })
-
-            // if (deleteProduct) {
-            //     // Delete Image from uploads -> products folder
-            //     deleteImages(deleteProductObj.pimages, 'string')
-            // }
         } catch (err) {
             console.log(err)
         }
