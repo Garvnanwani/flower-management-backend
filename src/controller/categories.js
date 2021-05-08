@@ -16,7 +16,7 @@ const getAllCategory = async (req, res) => {
 
 const postAddCategory = async (req, res) => {
     let { cName, cDescription, cStatus } = req.body
-    let category_image = req.file.filename
+    let cImage = req.file.filename
     // const filePath = `./public/uploads/categories/${category_image}`
 
     if (!cName || !cDescription || !cStatus) {
@@ -45,9 +45,9 @@ const postAddCategory = async (req, res) => {
             } else {
                 const [result, _] = await db.query(
                     `
-                INSERT INTO categories (cName, cDescription,cStatus) VALUES (?, ?)
+                INSERT INTO categories (cName, cDescription,cStatus, cImage) VALUES (?, ?, ?, ?)
                 `,
-                    [cName, cDescription, cStatus]
+                    [cName, cDescription, cStatus, cImage]
                 )
 
                 return res.json({
