@@ -21,26 +21,52 @@ const getSingleUser = async (req, res) => {
 
 const postEditUser = async (req, res) => {
     let { user_id, name, phone_number } = req.body
-    if (!user_id || !name || !phone_number) {
-        return res.json({ message: 'All fields must be required' })
-    } else {
-        try {
+    try {
+        if (name && phone_number) {
             const [result, _] = await db.query(
                 `
-                UPDATE users
-                SET
-                    name = ?,
-                    phone_number = ?
-                WHERE
-                    user_id = ?
-            `,
+                    UPDATE users
+                    SET
+                        name = ?,
+                        phone_number = ?
+                    WHERE
+                        user_id = ?
+                `,
                 [name, phone_number, user_id]
             )
 
             return res.json({ success: 'User updated successfully' })
-        } catch (err) {
-            console.log(err)
+        } else if (name) {
+            const [result, _] = await db.query(
+                `
+                    UPDATE users
+                    SET
+                        name = ?
+                    WHERE
+                        user_id = ?
+                `,
+                [name, user_id]
+            )
+
+            return res.json({ success: 'User updated successfully' })
+        } else if (phone_number) {
+            const [result, _] = await db.query(
+                `
+                    UPDATE users
+                    SET
+                        phone_number = ?
+                    WHERE
+                        user_id = ?
+                `,
+                [phone_number, user_id]
+            )
+
+            return res.json({ success: 'User updated successfully' })
+        } else {
+            return res.json({ error: 'All fields must be required' })
         }
+    } catch (err) {
+        console.log(err)
     }
 }
 

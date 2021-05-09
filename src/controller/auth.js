@@ -88,7 +88,7 @@ const postSignup = async (req, res) => {
                 }
             }
         } else {
-            return res.json({ error })
+            return res.json({ error: 'Email should be valid' })
         }
     } catch (err) {
         console.log(err)

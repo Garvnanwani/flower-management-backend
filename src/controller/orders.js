@@ -23,7 +23,7 @@ const getOrderByUser = async (req, res) => {
         try {
             const [result, _] = await db.query(
                 `
-            SELECT orders.order_id, users.name, users.email, order_details.product_name ,order_details.product_price
+            SELECT orders.order_id, users.name, users.email, order_details.product_name ,order_details.product_cost
             FROM ((orders
             INNER JOIN users ON orders.user_id = users.user_id)
             INNER JOIN order_details ON orders.order_id = order_details.order_id)
@@ -59,7 +59,7 @@ const postCreateOrder = async (req, res) => {
                         ${order_item.product_id},
                         ${order_item.product_name},
                         ${order_item.quantity},
-                        ${order_item.product_price},
+                        ${order_item.product_cost},
                 )`
                 values.push(row)
             })
@@ -68,7 +68,7 @@ const postCreateOrder = async (req, res) => {
             const result2 = db.query(
                 `
                 INSERT INTO order_detail
-                    (order_id, product_id, product_name, quantity, product_price)
+                    (order_id, product_id, product_name, quantity, product_cost)
                 VALUES ?`,
                 [rows]
             )
