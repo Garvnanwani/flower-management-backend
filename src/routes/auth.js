@@ -3,7 +3,6 @@ const router = express.Router()
 const { allUser, postSignup, postSignin } = require('../controller/auth')
 const { loginCheck, isAuth, isAdmin } = require('../middleware/auth')
 
-// router.post('/isadmin', isAdmin)
 router.post('/signup', postSignup)
 router.post('/signin', postSignin)
 router.post('/user', loginCheck, isAuth, isAdmin, allUser)

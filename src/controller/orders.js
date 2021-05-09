@@ -79,22 +79,6 @@ const postCreateOrder = async (req, res) => {
     }
 }
 
-// const postUpdateOrder = async (req, res) => {
-//     let { order_id } = req.body
-//     if (!order_id || !status) {
-//         return res.json({ message: 'All fields must be required' })
-//     } else {
-//         let currentOrder = orderModel.findByIdAndUpdate(order_id, {
-//             status: status,
-//             updatedAt: Date.now(),
-//         })
-//         currentOrder.exec((err, result) => {
-//             if (err) console.log(err)
-//             return res.json({ success: 'Order updated successfully' })
-//         })
-//     }
-// }
-
 const postDeleteOrder = async (req, res) => {
     let { order_id } = req.body
     if (!order_id) {
@@ -125,6 +109,5 @@ module.exports = {
     getAllOrders,
     getOrderByUser,
     postCreateOrder,
-    // postUpdateOrder,
     postDeleteOrder,
 }

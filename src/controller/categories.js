@@ -17,7 +17,6 @@ const getAllCategory = async (req, res) => {
 const postAddCategory = async (req, res) => {
     let { cName, cDescription, cStatus } = req.body
     let cImage = req.file.filename
-    // const filePath = `./public/uploads/categories/${category_image}`
 
     if (!cName || !cDescription || !cStatus) {
         fs.unlink(filePath, (err) => {
@@ -88,9 +87,6 @@ const getDeleteCategory = async (req, res) => {
         return res.json({ error: 'All fields must be required' })
     } else {
         try {
-            // let deletedCategoryFile = await categoryModel.findById(category_id)
-            // const filePath = `./public/uploads/categories/${deletedCategoryFile.image}`
-
             const [result, _] = await db.query(
                 `
                 DELETE FROM categories WHERE category_id = ?
@@ -98,17 +94,6 @@ const getDeleteCategory = async (req, res) => {
                 [category_id]
             )
 
-            // if (deleteCategory) {
-            //     // Delete Image from uploads -> categories folder
-            //     fs.unlink(filePath, (err) => {
-            //         if (err) {
-            //             console.log(err)
-            //         }
-            //         return res.json({
-            //             success: 'Category deleted successfully',
-            //         })
-            //     })
-            // }
             return res.json({
                 success: 'Category deleted successfully',
             })

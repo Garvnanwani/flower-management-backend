@@ -29,9 +29,6 @@ exports.isAuth = (req, res, next) => {
 
 exports.isAdmin = async (req, res, next) => {
     try {
-        // get the requested user
-
-        // If user role 0 that's mean not admin it's customer
         if (reqUser.userRole === 0) {
             res.status(403).json({ error: 'Access denied' })
         }
