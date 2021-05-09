@@ -69,7 +69,7 @@ const postEditCategory = async (req, res) => {
             `
         UPDATE categories
         SET
-            cDescription = ?
+            cDescription = ?,
             cStatus = ?
         WHERE
             category_id = ?
