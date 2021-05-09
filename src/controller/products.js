@@ -133,11 +133,11 @@ const postEditProduct = async (req, res) => {
         const [result, _] = await db.query(
             `
             UPDATE products
-            SET pName : ?
-                pDescription : ?
-                pPrice : ?
-                pQuantity : ?
-                pCategory : ?
+            SET pName : ?,
+                pDescription : ?,
+                pPrice : ?,
+                pQuantity : ?,
+                pCategory : ?,
                 pStatus: ?
             WHERE product_id = ?
             `,
