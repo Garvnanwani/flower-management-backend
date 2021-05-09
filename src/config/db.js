@@ -8,8 +8,8 @@ const db = mysql.createPool({
     password: 'iGcuguP1nxOGx23lGRrD',
     database: 'bbghgkymw2dsxofwagqm',
     waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
+    connectionLimit: 15,
+    queueLimit: 10,
 })
 
 module.exports = db

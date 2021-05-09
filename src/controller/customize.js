@@ -27,18 +27,18 @@ const getAllData = async (req, res) => {
     }
 }
 
-// const getImages = async (req, res) => {
-//     try {
-//         let Images = await customizeModel.find({})
-//         if (Images) {
-//             return res.json({ Images })
-//         }
-//     } catch (err) {
-//         console.log(err)
-//     }
-// }
+const getImages = async (req, res) => {
+    try {
+        const [Images, _] = await db.query(`
+            SELECT * FROM slider_images
+        `)
+        return res.json({ Images })
+    } catch (err) {
+        console.log(err)
+    }
+}
 
 module.exports = {
     getAllData,
-    // getImages
+    getImages,
 }

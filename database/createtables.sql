@@ -58,6 +58,10 @@ CREATE TABLE reviews(
   review VARCHAR(200),
   rating FLOAT(8, 2)
 );
+CREATE TABLE slider_images(
+  silder_id INT AUTO_INCREMENT PRIMARY KEY,
+  sliderImage VARCHAR(100)
+);
 -- DELETE ALL TABLES
 DROP TABLE users;
 DROP TABLE products;
