@@ -60,22 +60,12 @@ const postAddProduct = async (req, res) => {
         !pCategory ||
         !pStatus
     ) {
-        // deleteImages(images, 'file')
         return res.json({ error: 'All fields must be required' })
-    }
-    // Validate Name and description
-    else if (pName.length > 255 || pDescription.length > 3000) {
-        // deleteImages(images, 'file')
+    } else if (pName.length > 255 || pDescription.length > 3000) {
         return res.json({
             error: 'Name 255 & Description must not be 3000 character long',
         })
-    }
-    // Validate Images
-    // else if (images.length !== 2) {
-    //     deleteImages(images, 'file')
-    //     return res.json({ error: 'Must need to provide 2 images' })
-    // }
-    else {
+    } else {
         try {
             pImage = image.filename
             const [result, _] = await db.query(
@@ -138,20 +128,7 @@ const postEditProduct = async (req, res) => {
             error: 'Name 255 & Description must not be 3000 charecter long',
         })
     }
-    // Validate Update Images
-    // else if (editImages && editImages.length == 1) {
-    //     deleteImages(editImages, 'file')
-    //     return res.json({ error: 'Must need to provide 2 images' })
-    // }
-    else {
-        // if (editImages.length == 2) {
-        //     let allEditImages = []
-        //     for (const img of editImages) {
-        //         allEditImages.push(img.filename)
-        //     }
-        //     editData = { ...editData, pimages: allEditImages }
-        //     deleteImages(pimages.split(','), 'string')
-    }
+
     try {
         const [result, _] = await db.query(
             `
@@ -218,11 +195,6 @@ const getSingleProduct = async (req, res) => {
                 WHERE products.product_id = ?`,
                 [product_id]
             )
-
-            // let singleProduct = await productModel
-            //     .findById(product_id)
-            //     .populate('pCategory', 'cName')
-            //     .populate('pRatingsReviews.user', 'name email userImage')
 
             return res.json({ Product: result[0] })
         } catch (err) {
