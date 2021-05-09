@@ -27,18 +27,6 @@ const getAllData = async (req, res) => {
     }
 }
 
-const getImages = async (req, res) => {
-    try {
-        const [Images, _] = await db.query(`
-            SELECT * FROM slider_images
-        `)
-        return res.json({ Images })
-    } catch (err) {
-        console.log(err)
-    }
-}
-
 module.exports = {
     getAllData,
-    getImages,
 }
