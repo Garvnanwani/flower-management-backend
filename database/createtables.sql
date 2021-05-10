@@ -4,7 +4,6 @@ CREATE TABLE users(
   name VARCHAR(50),
   email VARCHAR(50),
   password VARCHAR(200),
-  default_shipping_address VARCHAR(100),
   phone_number INT,
   user_role TINYINT(1) DEFAULT 0,
   register_date DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -37,7 +36,6 @@ CREATE TABLE orders (
   created_on DATETIME DEFAULT CURRENT_TIMESTAMP,
   status VARCHAR(50) DEFAULT "Not processed",
   user_id INT,
-  product_id VARCHAR(10),
   phone_number INT,
   address VARCHAR(150)
 );
