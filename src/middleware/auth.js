@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const { JWT_SECRET } = require('../config/keys')
+const db = require('../config/db')
 
 exports.loginCheck = (req, res, next) => {
     try {
@@ -19,19 +20,18 @@ exports.isAuth = (req, res, next) => {
     let { loggedInUserId } = req.body
     if (
         !loggedInUserId ||
-        !req.userDetails._id ||
-        loggedInUserId != req.userDetails._id
+        !req.userDetails.user_id ||
+        loggedInUserId != req.userDetails.user_id
     ) {
-        res.status(403).json({ error: 'You are not authenticate' })
+        res.status(403).json({ error: 'You are not authenticated' })
     }
     next()
 }
 
 exports.isAdmin = async (req, res, next) => {
-    let { loggedInUserId } = req.body
-    const reqUser = req.userDetails
+    const reqUserRole = req.userDetails.role
     try {
-        if (reqUser.userRole === 0) {
+        if (reqUserRole === 0) {
             res.status(403).json({ error: 'Access denied' })
         }
         next()
